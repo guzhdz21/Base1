@@ -1,0 +1,56 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-title class="centrar">Iniciar Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-avatar>
+    <img src="/assets/images/Logo.JPG">
+  </ion-avatar>
+
+  <ion-item color="primary" class="linea"></ion-item>
+
+  <form #formulario="ngForm">
+    <ion-item lines="none">
+      <app-boton-info titulo="Numero de empleado" color="medium"></app-boton-info>
+      <ion-input type="number" 
+                 placeholder="Num. Empleado" 
+                 [(ngModel)]="numero" 
+                 name="numero"
+                 required>
+                </ion-input>
+    </ion-item>
+  
+    <ion-item lines="none">
+      <app-boton-info titulo="Contraseña" color="medium"></app-boton-info>
+      <ion-input [type]="passwordV" 
+                 placeholder="Contraseña" 
+                 [(ngModel)]="password" 
+                 name="contraseña"
+                 required>
+                </ion-input>
+      <ion-buttons slot="end">
+        <ion-button slot="icon-only" (click)="passwordVisible()">
+          <ion-icon [name]="visible" color="medium"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+
+    <ion-item *ngIf="logInvalido" lines="none" class="menosTop">
+      <ion-label class="centrar ion-text-wrap advertencia">
+        {{textoError}}
+      </ion-label>
+    </ion-item>
+
+    <br *ngIf="!logInvalido">
+
+    <ion-item lines="none">
+      <ion-label class="centrar"><a (click)="restablecer()">¿Olvidaste tu contraseña?</a></ion-label>
+    </ion-item>
+  
+    <ion-button class="centrari boton1" (click)="login()" [disabled]="formulario.invalid">Ingresar</ion-button>
+  </form>
+  
+
+</ion-content>
