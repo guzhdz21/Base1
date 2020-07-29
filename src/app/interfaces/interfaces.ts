@@ -58,3 +58,8 @@ export interface Hora {
     hora: number;
     minutos: number;
 }
+
+export interface Dispositivo {
+    numero: number;
+    token: string;
+}

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { FireService } from '../../services/fire.service';
 import { Subscription, interval } from 'rxjs';
 import { Platform } from '@ionic/angular';
+import { PushFireService } from '../../services/push-fire.service';
 
 @Component({
   selector: 'app-bienvenida',
@@ -25,27 +26,11 @@ export class BienvenidaPage implements OnInit {
   constructor(private storage: StorageService,
               private router: Router,
               private fireService: FireService,
-              private plt: Platform) { }
+              private plt: Platform,
+              private pushFire: PushFireService) { }
 
   async ngOnInit() {
-    await this.storage.cargarUsuario().then(res => {
-      this.UsuarioLocal = res;
-      this.fireService.getAllUsuarios().then(res2 => {
-        res2.subscribe(val => {
-          if(res) {
-            for(var user of val) {
-              if(user.numero == res.numero && user.contraseña == res.contraseña) {
-                this.usuario = user;
-                return;
-              }
-            }
-            this.noLogin = true;
-          } else {
-            this.noLogin = true;
-          }
-        });
-      });
-    });
+    await this.obtenerUsuarioLocal();
 
     this.timer = interval(1500);
     this.timerSub = this.timer.subscribe(x => {
@@ -65,6 +50,51 @@ export class BienvenidaPage implements OnInit {
         this.router.navigate(["/login"]);
         this.timerSub.unsubscribe();
       }
+    });
+  }
+
+  async obtenerUsuarioLocal() {
+    await this.storage.cargarUsuario().then(res => {
+      this.UsuarioLocal = res;
+      this.obtenerUsuario(res);
+    });
+  }
+
+  async obtenerUsuario(local: Usuario) {
+    await this.fireService.getAllUsuarios().then(res => {
+      res.subscribe(val => {
+        if(local) {
+          for(var user of val) {
+            if(user.numero == local.numero && user.contraseña == local.contraseña) {
+              this.usuario = user;
+              this.obtenerDispositvos(user);
+              return;
+            }
+          }
+          this.noLogin = true;
+          return;
+        } else {
+          this.noLogin = true;
+          return;
+        }
+      });
+    });
+  }
+
+  async obtenerDispositvos(user: Usuario) {
+    await this.fireService.getAllDispositivos().then(res => {
+      res.subscribe(val => {
+        this.pushFire.leerToken().then(res4 => {
+          for(var dis of val) {
+            //Esta linea debe modificarse cuando se usa en ionic serve
+            if(true) { //user.numero == dis.numero && dis.token == res4
+              return;
+            }
+          }
+          this.noLogin = true;
+          return;
+        });
+      });
     });
   }
   

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1033857970414",
+    "firebase_url": "https://base-aae73.firebaseio.com",
+    "project_id": "base-aae73",
+    "storage_bucket": "base-aae73.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033857970414:android:d52e4fdc77247e72fd43ff",
+        "android_client_info": {
+          "package_name": "com.softsolutionsco.global"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033857970414-qoruv2m33bjgp9h9gkpmg9lu94bfs91e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6Vuz_Lr63iXVOtRtqX35eYub40BVkA3I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033857970414-qoruv2m33bjgp9h9gkpmg9lu94bfs91e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

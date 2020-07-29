@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Usuario, Seguridad, Cliente, Asistencia } from '../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,9 @@ export class FireService {
 
   private asistenciasColletion: AngularFirestoreCollection<Asistencia>;
   private asistencias: Observable<Asistencia[]>;
+
+  private dispositivosColletion: AngularFirestoreCollection<Dispositivo>;
+  private dispositivos: Observable<Dispositivo[]>;
 
   constructor(private db: AngularFirestore) {
   }
@@ -164,4 +167,37 @@ export class FireService {
     return this.asistenciasColletion.add(asistencia);
   }
 
+  fireDispositivos() {
+    this.dispositivosColletion = this.db.collection<Dispositivo>('dispositivos');
+
+    this.dispositivos = this.dispositivosColletion.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
+  }
+
+  async getAllDispositivos() {
+    await this.fireDispositivos();
+    return this.dispositivos;
+  }
+
+  async addDispositivos(dispositivo: Dispositivo) {
+    await this.fireDispositivos();
+    return this.dispositivosColletion.add(dispositivo);
+  }
+
+  async updateDispositivos(dispositivo: Dispositivo, id: string) {
+    await this.fireDispositivos();
+    return this.dispositivosColletion.doc(id).update(dispositivo);
+  }
+
+  async removeDispositivos(id: string) {
+    await this.fireDispositivos();
+    return this.dispositivosColletion.doc(id).delete();
+  }
 }

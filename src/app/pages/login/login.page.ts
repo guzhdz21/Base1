@@ -6,6 +6,8 @@ import { AccionesService } from '../../services/acciones.service';
 import { StorageService } from '../../services/storage.service';
 import { Subscription } from 'rxjs';
 import { Platform } from '@ionic/angular';
+import { PushFireService } from '../../services/push-fire.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +34,8 @@ export class LoginPage implements OnInit {
               private router: Router,
               private accionesService: AccionesService,
               private storageService: StorageService,
-              private plt: Platform) { }
+              private plt: Platform,
+              private pushFire: PushFireService) { }
 
   ngOnInit() {
     this.obtenerUsuarios();
@@ -70,6 +73,8 @@ export class LoginPage implements OnInit {
           await this.storageService.guardarUsuario(this.usuario);
           await this.storageService.guardarNacimiento(this.usuario.nacimiento.toDate().toISOString());
           await this.storageService.guardarId(this.idUsuario);
+          //comentar esta linea en ionic serve
+          await this.guardarToken(this.usuario.numero);
           await this.seleccionarHome(this.usuario.tipo);
           return;
         }
@@ -86,6 +91,16 @@ export class LoginPage implements OnInit {
     this.password = null;
   }
 
+  async guardarToken(numero: number) {
+    await this.pushFire.cargarDispositivos();
+    await this.pushFire.getToken(numero);
+    await this.pushFire.listenNotifications().pipe(
+      tap(msg => {
+        this.accionesService.presentToast(msg.body);
+      })
+    );
+  }
+
   async restablecer() {
     this.router.navigate(["recuperar-password"]);
   }
@@ -93,7 +108,7 @@ export class LoginPage implements OnInit {
   seleccionarHome(tipo: string) {
     switch (tipo) {
       case 'Elemento seguridad': {
-        this.router.navigate(["/home-guardia"]);
+        this.router.navigate(["/home-guardia"], {replaceUrl: true});
         break;
       }
       case 'Recursos humanos': {
@@ -103,11 +118,12 @@ export class LoginPage implements OnInit {
     }
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.numero = null;
     this.password = "";
     this.visible = "eye-off";
     this.passwordV = "password";
+    await this.pushFire.cargarDispositivos();
   }
 
   async ionViewDidEnter() {

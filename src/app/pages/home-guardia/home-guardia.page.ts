@@ -5,8 +5,10 @@ import { FireService } from '../../services/fire.service';
 import { ModalController, Platform, NavController } from '@ionic/angular';
 import { RegAsistenciaPage } from '../reg-asistencia/reg-asistencia.page';
 import { Subscription, interval } from 'rxjs';
-import { Router } from '@angular/router';
 import { AccionesService } from '../../services/acciones.service';
+import { PushFireService } from '../../services/push-fire.service';
+import { tap } from 'rxjs/operators';
+import { JsonsService } from '../../services/jsons.service';
 
 @Component({
   selector: 'app-home-guardia',
@@ -55,6 +57,7 @@ export class HomeGuardiaPage implements OnInit {
   autentificacion;
   autenSub;
   existe: boolean = true;
+  leave: boolean = false;
   
 
   usuarioFake: Usuario = {
@@ -72,7 +75,9 @@ export class HomeGuardiaPage implements OnInit {
               private modalCtrl: ModalController,
               private plt: Platform,
               private navCtrl: NavController,
-              private accionesService: AccionesService) { }
+              private accionesService: AccionesService,
+              private pushFire: PushFireService,
+              private json: JsonsService) { }
 
   async ngOnInit() {
     await this.obtenerUsuarioLocal();
@@ -87,6 +92,10 @@ export class HomeGuardiaPage implements OnInit {
           this.checarTiempo();
         }
       }
+      console.log("enviar");
+      this.json.enviarPush().subscribe(val => {
+        console.log(val);
+      });
     });
 
     this.autentificacion = interval(3500);
@@ -95,7 +104,7 @@ export class HomeGuardiaPage implements OnInit {
       this.cargarUsuarioComparar();
     });
   }
-
+  //Metodos de carga
   async obtenerUsuarioLocal() {
     await this.storageService.cargarUsuario().then(res => {
       this.usuarioLocal = res;
@@ -180,6 +189,7 @@ export class HomeGuardiaPage implements OnInit {
     this.nacimiento = await this.storageService.cargarNacimiento();
   }
 
+  //Metodos de verificacion
   async verificarAsistencia(seguridad: Seguridad) {
     var fecha = new Date();
     var fecha = new Date();
@@ -312,6 +322,7 @@ export class HomeGuardiaPage implements OnInit {
     await this.procesoBorrado2();
     return;
   }
+
   async procesoBorrado2() {
     await this.accionesService.presentAlertGenerica("Error", "Tu usuario no se encontra registrado," 
         + " por seguridad tendras que volver a ingresar a tu cuenta");
@@ -322,6 +333,7 @@ export class HomeGuardiaPage implements OnInit {
     return;
   }
 
+  //Metodos de la venta e interaccion
   segment(event) {
     switch (event.detail.value) {
 
@@ -372,9 +384,97 @@ export class HomeGuardiaPage implements OnInit {
     this.textoBoton = "Ya has registrado tu aistencia de hoy";
   }
 
+  //Metodos que manejan la navegacion de paginas
   async ionViewDidEnter() {
     this.backButtonSub = this.plt.backButton.subscribeWithPriority( 10000, async () => {
       navigator["app"].exitApp();
     });
+    
+    if(this.leave) {
+      await this.reinicioVariables();
+      await this.obtenerUsuarioLocal();
+      await this.obtenerNacimiento();
+
+    this.timer = interval(10000);
+    this.timerSub = this.timer.subscribe(x => {
+      if(this.sinServicio == false && this.asistenciaRegistrada == false) {
+        if(this.tiempo == true) {
+          this.timerSub.unsubscribe();
+        } else {
+          this.checarTiempo();
+        }
+      }
+      console.log("enviar");
+      this.json.enviarPush().subscribe(val => {
+        console.log(val);
+      });
+    });
+
+    this.autentificacion = interval(3500);
+    this.autenSub = await this.autentificacion.subscribe(x => {
+      console.log("verificar");
+      this.cargarUsuarioComparar();
+    });
+    }
+  }
+
+  reinicioVariables() {
+    //Variables visuales generales
+    this.asistenciaS = true;
+    this.reportarS = false;
+    this.asignacionesS = false;
+    this.titulo = "Informacion General";
+    this.icono = "document-text";
+
+    //Variables visuales de asistencia
+    this.textoBoton = "";
+    this.nacimiento = new Date().toISOString();
+    this.servicioText = "";
+    this.supervisor = "";
+    this.horasS = null;
+
+    //Varibales del boton asistencia
+    this.asistenciaRegistrada = false;
+    this.tiempo = false;
+    this.timer = null;
+    this.timerSub = null;
+    this.sinServicio = true;
+
+    //Variables de los datos del usuario
+    this.usuarioLocal = null;
+    this.usuario = {
+      contraseña: null,
+      nacimiento: null,
+      nombre: null,
+      numero: null,
+      tipo: null,
+    }
+    this.seguridad = null;
+    this.cliente = null;
+    this.servicio = null;
+    this.id = null;
+
+    //Variables de funcionalidad
+    this.autentificacion = null;
+    this.autenSub = null;
+    this.existe = true;
+    this.leave = false;
+
+    this.usuarioFake = {
+      contraseña: null,
+      nacimiento: null,
+      nombre: null,
+      numero: null,
+      tipo: null,
+    }
+
+    this.user = null;
+    return;
+  }
+
+  async ionViewWillLeave() {
+    await this.timerSub.unsubscribe();
+    await this.autenSub.unsubscribe();
+    this.leave = true;
   }
 }

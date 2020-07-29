@@ -22,11 +22,11 @@ export class MenuComponent implements OnInit {
     await this.cargarUsuario();
   }
 
-  redirigir(nombre: string, irA: string) {
+  async redirigir(nombre: string, irA: string) {
     if(nombre == "Cerrar Sesion") {
-      this.storage.eliminarUsuario();
+      await this.storage.eliminarUsuario();
     }
-    this.router.navigate([irA]);
+    await this.router.navigate([irA]);
   }
 
   async cargarUsuario() {

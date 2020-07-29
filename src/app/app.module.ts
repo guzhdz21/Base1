@@ -13,7 +13,8 @@ import { firebaseConfig } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { IonicStorageModule } from '@ionic/storage';
-import {Camera} from '@ionic-native/camera/ngx'
+import {Camera} from '@ionic-native/camera/ngx';
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +31,8 @@ import {Camera} from '@ionic-native/camera/ngx'
     SplashScreen,
     HttpClientModule,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    Camera
+    Camera,
+    FirebaseX
   ],
   bootstrap: [AppComponent]
 })
