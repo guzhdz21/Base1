@@ -6,6 +6,7 @@ import { AccionesService } from '../../services/acciones.service';
 import { Usuario, Seguridad, Cliente, Servicio } from '../../interfaces/interfaces';
 import { Subscription, interval } from 'rxjs';
 import { stringify } from 'querystring';
+import { AgregarEmpleadoPage } from '../agregar-empleado/agregar-empleado.page';
 
 @Component({
   selector: 'app-home-rh',
@@ -132,50 +133,17 @@ export class HomeRHPage implements OnInit {
       }}]);
     }
 
-
-    /*
-    async obtenerUsuarios(usuario: Usuario) {
-      await this.fireService.getAllUsuarios().then(res => {
-        res.subscribe(val => {
-          for(var seg of val) {
-            if(usuario.numero == seg.numero) {
-              this.seguridad = seg;
-              this.servicioText = "";
-              this.servicioText += seg.servicio.cliente + " - ";
-              this.horasS = seg.servicio.tipo;
-              this.obtenerSupervisor(seg);
-              this.obtenerClientes(seg);
-              this.checarTiempoInicial(seg);
-              break;
-            }
-          }
-        });
-      });
-    }
-  */
-
     async obtenerNacimiento() {
       this.nacimiento = await this.storageService.cargarNacimiento();
     }
 
-    /*
-    async abrirRegistroAsistencia() {
+    
+    async agregarNuevoEmpleado() {
       const modal = await this.modalCtrl.create({
-        component: RegAsistenciaPage,
-        componentProps: {
-          servicioText: this.servicioText,
-          hora: this.seguridad.servicio.horario.hora,
-          minutos: this.seguridad.servicio.horario.minutos,
-          servicio: this.seguridad.servicio,
-          numero: this.usuario.numero
-        }
+        component: AgregarEmpleadoPage,
       });
       await modal.present();
-      const {data}  = await modal.onDidDismiss();
-      this.asistenciaRegistrada = data.registrado;
-      this.textoBoton = "Ya has registrado tu aistencia de hoy";
     }
-    */
 
     async cargarUsuarioComparar() {
       if(this.usuarioLocal != null && this.id != null) {
