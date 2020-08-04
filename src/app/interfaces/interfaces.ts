@@ -17,12 +17,17 @@ export interface Usuario {
 export interface Seguridad {
     numero: number;
     papeleria: number;
-    servicio: ServicioA
+    servicios: Asignacion[];
     supervisor: number;
 }
 
 export interface recursosHumanos {
     numero: number;
+}
+
+export interface Asignacion {
+    dia: string;
+    servicio: ServicioA
 }
 
 export interface Asistencia {
@@ -62,4 +67,18 @@ export interface Hora {
 export interface Dispositivo {
     numero: number;
     token: string;
+}
+
+export interface Incidente {
+    numero: number;
+    nombre: string;
+    servicio: string;
+    titulo: string;
+    descripcion: string;
+    hora: Hora;
+}
+
+export interface Supervisor {
+    numero: number;
+    alertas: Incidente[];
 }

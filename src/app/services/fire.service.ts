@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo } from '../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo, Supervisor } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,9 @@ export class FireService {
 
   private dispositivosColletion: AngularFirestoreCollection<Dispositivo>;
   private dispositivos: Observable<Dispositivo[]>;
+
+  private supervisoresColletion: AngularFirestoreCollection<Supervisor>;
+  private supervisores: Observable<Supervisor[]>;
 
   constructor(private db: AngularFirestore) {
   }
@@ -199,5 +202,39 @@ export class FireService {
   async removeDispositivos(id: string) {
     await this.fireDispositivos();
     return this.dispositivosColletion.doc(id).delete();
+  }
+
+  fireSupervisores() {
+    this.supervisoresColletion = this.db.collection<Supervisor>('supervisores');
+
+    this.supervisores = this.supervisoresColletion.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
+  }
+
+  async getAllSupervisores() {
+    await this.fireSupervisores();
+    return this.supervisores;
+  }
+
+  async addSupervisores(supervisor: Supervisor) {
+    await this.fireSupervisores();
+    return this.supervisoresColletion.add(supervisor);
+  }
+
+  async updateSupervisores(supervisor: Supervisor, id: string) {
+    await this.fireSupervisores();
+    return this.supervisoresColletion.doc(id).update(supervisor);
+  }
+
+  async removeSupervisores(id: string) {
+    await this.fireSupervisores();
+    return this.supervisoresColletion.doc(id).delete();
   }
 }

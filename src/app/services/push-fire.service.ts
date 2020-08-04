@@ -3,6 +3,7 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { Platform } from '@ionic/angular';
 import { Dispositivo } from '../interfaces/interfaces';
 import { FireService } from './fire.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class PushFireService {
 
   constructor(private firebase: FirebaseX,
               private fireService: FireService,
-              private plt: Platform) { }
+              private plt: Platform,
+              private http: HttpClient) { }
   
   async cargarDispositivos() {
     await this.fireService.getAllDispositivos().then(res => {
@@ -104,5 +106,24 @@ export class PushFireService {
       var token = await this.firebase.getToken();
     }
     return token;
+  }
+
+  enviarPush(titulo: string, mensaje: string, token: string, servicio: string) {
+    let datos = {
+      notification: {
+        title: "Alerta de Incidente",
+        body: "Incidente en " + servicio + ": " + titulo + ". " + mensaje
+      },
+      to: token
+    }
+
+    let options = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=AAAA8La8sO4:APA91bFUxCWkOXDyZW-2KFsh_LnXn7W-ns03du2ckrYhBR85i5slwHS57DrFPb0i-QS3fRauuPULOy9JD0v86KAnNc5NZWKqN48MG7UpLFKE3Q36NGqdxzPcHXbOgK3XNPN6_v62L1sR'
+      }
+    }
+    let url = 'https://fcm.googleapis.com/fcm/send'
+    return this.http.post(url, datos, options);
   }
 }

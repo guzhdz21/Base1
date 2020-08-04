@@ -108,6 +108,10 @@ export class BienvenidaPage implements OnInit {
         this.router.navigate(["/home-rh"]);
         break;
       }
+      case 'Supervisor' : {
+        this.router.navigate(["/home"]);
+        break;
+      }
     }
     return;
   }

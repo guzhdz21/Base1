@@ -22,6 +22,7 @@
     </ion-item>
 
     <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
+
     <div *ngIf="titulo == 'Informacion General' && existe">
         <ion-list>
             <ion-item>
@@ -51,7 +52,7 @@
 
             <ion-item>
                 <ion-label color="primary">Horas de servicio:</ion-label>
-                <ion-label class="margentexto ion-text-wrap">{{horasS}}</ion-label>
+                <ion-label class="margentexto ion-text-wrap">{{horasS}} h</ion-label>
             </ion-item>
             
             <ion-item color="light">
@@ -72,6 +73,107 @@
                     (click)="abrirRegistroAsistencia()" 
                     [disabled]="tiempo || asistenciaRegistrada || sinServicio">
                     Registrar asistencia</ion-button>
+    </div>
+
+    <div *ngIf="titulo == 'Reportar Incidente' && existe">
+        <div *ngIf="!abrirFormulario">
+            <br>
+
+            <ion-item class="imagen" lines="none">
+                <img src="/assets/images/alarma.png">
+            </ion-item>
+    
+            <ion-item lines="none">
+                <ion-label class="ion-text-wrap centrar">Oprime el boton "REPORTAR" para avisar a tu supervisor de algun incidente</ion-label>
+            </ion-item>
+    
+            <br>
+    
+            <ion-button class="centrari boton1" 
+                        (click)="abrirFormularioReporte()"
+                        >Reportar</ion-button>
+        </div>
+
+        <div *ngIf="abrirFormulario">
+            <br>
+            <ion-card>
+                <ion-card-header color="primary">
+                    <ion-card-title class="centrar">Alerta de Incidente</ion-card-title>
+                </ion-card-header>
+
+                <ion-card-content>
+                    <ion-item lines="none">
+                        <ion-label color="primary" position="floating">Servicio</ion-label>
+                        <ion-input [value]="servicioText" readonly></ion-input>
+                    </ion-item>
+
+                    <form #formulario="ngForm">
+                        <ion-item lines="none">
+                            <ion-label color="primary" position="floating">Titulo</ion-label>
+                            <ion-input placeholder="Ingresar titulo del incidente" 
+                                        name="titulo"
+                                        required
+                                        [(ngModel)]="tituloAlerta"></ion-input>
+                        </ion-item>
+    
+                        <ion-item lines="none">
+                            <ion-label color="primary" position="floating">Descripcion</ion-label>
+                            <ion-textarea placeholder="Ingresar descripcion del incidente"
+                                            name="descripcion"
+                                            required
+                                            [(ngModel)]="descripcionAlerta"></ion-textarea>
+                        </ion-item>
+    
+                        <ion-item lines="none">
+                            <ion-button class="boton2" 
+                                        (click)="cancelarAlerta()">Cancelar</ion-button>
+                            <ion-button class="boton2" 
+                                        [disabled]="formulario.invalid"
+                                        (click)="enviarAlerta()">Enviar</ion-button>
+                        </ion-item>
+                    </form>
+                    
+
+                </ion-card-content>
+            </ion-card>
+        </div>
+    </div>
+
+    <div *ngIf="titulo == 'Asignaciones de la Semana'">
+        <ion-item lines="none">
+            <ion-label class="ion-text-wrap centrar">Servicios asignados para la semana</ion-label>
+        </ion-item>
+
+        <ion-list>
+            <div *ngFor="let dia of dias; let i = index" class="masBottom">
+                <ion-item-divider [color]="dia.color">
+                    <ion-label>{{dia.dia}}</ion-label>
+                    <ion-buttons slot="end">
+                        <ion-button slot="icon-only" (click)="abrirDia(i)">
+                          <ion-icon [name]="dia.flecha"></ion-icon>
+                        </ion-button>
+                      </ion-buttons>
+                </ion-item-divider>
+
+                <ion-list *ngIf="dia.ver">
+                    <ion-item lines="none">
+                        <ion-label color="primary">Servicio:</ion-label>
+                        <ion-label>{{dia.servicio}}</ion-label>
+                    </ion-item>
+        
+                    <ion-item lines="none">
+                        <ion-label color="primary">Hora: </ion-label>
+                        <ion-label>{{dia.hora}}</ion-label>
+                    </ion-item>
+        
+                    <ion-item lines="none">
+                        <ion-label color="primary">Tiempo: </ion-label>
+                        <ion-label>{{dia.tiempo}} h</ion-label>
+                    </ion-item>
+                </ion-list>
+            </div>
+            
+        </ion-list>
     </div>
 
 </ion-content>

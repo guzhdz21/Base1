@@ -74,7 +74,7 @@ export class LoginPage implements OnInit {
           await this.storageService.guardarNacimiento(this.usuario.nacimiento.toDate().toISOString());
           await this.storageService.guardarId(this.idUsuario);
           //comentar esta linea en ionic serve
-          await this.guardarToken(this.usuario.numero);
+          //await this.guardarToken(this.usuario.numero);
           await this.seleccionarHome(this.usuario.tipo);
           return;
         }
@@ -113,6 +113,10 @@ export class LoginPage implements OnInit {
       }
       case 'Recursos humanos': {
         this.router.navigate(["/home-rh"]);
+        break;
+      }
+      case 'Supervisor' : {
+        this.router.navigate(["/home"]);
         break;
       }
     }

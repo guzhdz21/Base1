@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario, Seguridad, Cliente, Servicio } from '../../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Servicio, Incidente, Hora } from '../../interfaces/interfaces';
 import { StorageService } from '../../services/storage.service';
 import { FireService } from '../../services/fire.service';
 import { ModalController, Platform, NavController } from '@ionic/angular';
@@ -7,8 +7,6 @@ import { RegAsistenciaPage } from '../reg-asistencia/reg-asistencia.page';
 import { Subscription, interval } from 'rxjs';
 import { AccionesService } from '../../services/acciones.service';
 import { PushFireService } from '../../services/push-fire.service';
-import { tap } from 'rxjs/operators';
-import { JsonsService } from '../../services/jsons.service';
 
 @Component({
   selector: 'app-home-guardia',
@@ -38,6 +36,80 @@ export class HomeGuardiaPage implements OnInit {
   timerSub;
   sinServicio: boolean = true;
 
+  //Vairables visuales de reportar
+  abrirFormulario: boolean = false;
+
+  //Variables visuales asignaciones
+  dias: any[] = [
+    {
+      dia: "Lunes",
+      ver: false,
+      servicio: "Cruz Verde - Norte",
+      hora: "16:20",
+      tiempo: 24,
+      color: "light",
+      flecha: "arrow-forward"
+    },
+    {
+      dia: "Martes",
+      ver: false,
+      servicio: "Cruz Verde - Norte",
+      hora: "16:20",
+      tiempo: 24,
+      color: "light",
+      flecha: "arrow-forward"
+    },
+    {
+      dia: "Miercoles",
+      ver: false,
+      servicio: "Cruz Verde - Norte",
+      hora: "16:20",
+      tiempo: 24,
+      color: "light",
+      flecha: "arrow-forward"
+    },
+    {
+      dia: "Jueves",
+      ver: false,
+      servicio: "Cruz Verde - Norte",
+      hora: "16:20",
+      tiempo: 24,
+      color: "light",
+      flecha: "arrow-forward"
+    },
+    {
+      dia: "Viernes",
+      ver: false,
+      servicio: "Cruz Verde - Norte",
+      hora: "16:20",
+      tiempo: 24,
+      color: "light",
+      flecha: "arrow-forward"
+    },
+    {
+      dia: "Sabado",
+      ver: false,
+      servicio: "Cruz Verde - Norte",
+      hora: "16:20",
+      tiempo: 24,
+      color: "light",
+      flecha: "arrow-forward"
+    },
+    {
+      dia: "Domingo",
+      ver: false,
+      servicio: "Cruz Verde - Norte",
+      hora: "16:20",
+      tiempo: 24,
+      color: "light",
+      flecha: "arrow-forward"
+    }
+  ]
+
+  //Variables form
+  tituloAlerta: string = "";
+  descripcionAlerta: string ="";
+
   //Variables de los datos del usuario
   usuarioLocal: Usuario = null;
   usuario : Usuario = {
@@ -50,6 +122,7 @@ export class HomeGuardiaPage implements OnInit {
   seguridad: Seguridad;
   cliente: Cliente;
   servicio: Servicio;
+  supervisorData: any;
   id: string = null;
 
   //Variables de funcionalidad
@@ -57,7 +130,7 @@ export class HomeGuardiaPage implements OnInit {
   autentificacion;
   autenSub;
   existe: boolean = true;
-  leave: boolean = false;
+  dia: number;
   
 
   usuarioFake: Usuario = {
@@ -76,34 +149,11 @@ export class HomeGuardiaPage implements OnInit {
               private plt: Platform,
               private navCtrl: NavController,
               private accionesService: AccionesService,
-              private pushFire: PushFireService,
-              private json: JsonsService) { }
+              private pushFire: PushFireService) { }
 
   async ngOnInit() {
-    await this.obtenerUsuarioLocal();
-    await this.obtenerNacimiento();
-
-    this.timer = interval(10000);
-    this.timerSub = this.timer.subscribe(x => {
-      if(this.sinServicio == false && this.asistenciaRegistrada == false) {
-        if(this.tiempo == true) {
-          this.timerSub.unsubscribe();
-        } else {
-          this.checarTiempo();
-        }
-      }
-      console.log("enviar");
-      this.json.enviarPush().subscribe(val => {
-        console.log(val);
-      });
-    });
-
-    this.autentificacion = interval(3500);
-    this.autenSub = await this.autentificacion.subscribe(x => {
-      console.log("verificar");
-      this.cargarUsuarioComparar();
-    });
   }
+  
   //Metodos de carga
   async obtenerUsuarioLocal() {
     await this.storageService.cargarUsuario().then(res => {
@@ -130,10 +180,12 @@ export class HomeGuardiaPage implements OnInit {
         for(var seg of val) {
           if(usuario.numero == seg.numero) {
             this.seguridad = seg;
-            this.horasS = seg.servicio.tipo;
+            var fecha = (new Date().getDay()) - 1;
+            this.horasS = seg.servicios[fecha].servicio.tipo;
             this.obtenerSupervisor(seg);
-            this.obtenerClientes(seg);
-            this.checarTiempoInicial(seg);
+            this.obtenerClientes(seg, fecha);
+            this.checarTiempoInicial(seg, fecha);
+            this.obtenerDias(seg, fecha);
             break;
           }
         }
@@ -152,22 +204,33 @@ export class HomeGuardiaPage implements OnInit {
         }
       });
     });
+
+    await this.fireService.getAllSupervisores().then(res => {
+      res.subscribe(val => {
+        for(var supervisor of val) {
+          if(seguridad.supervisor == supervisor.numero) {
+            this.supervisorData = supervisor;
+            break;
+          }
+        }
+      })
+    });
   }
 
-  async obtenerClientes(seguridad: Seguridad) {
+  async obtenerClientes(seguridad: Seguridad, dia: number) {
     await this.fireService.getAllClientes().then(res => {
       res.subscribe(val => {
-        if(seguridad.servicio.cliente != null) {
+        if(seguridad.servicios[dia].servicio.cliente != null) {
           for(var cli of val) {
-            if(seguridad.servicio.cliente == cli.nombre) {
+            if(seguridad.servicios[dia].servicio.cliente == cli.nombre) {
               for(var ser of cli.servicios) {
-                if(this.seguridad.servicio.servicio == ser.numero) {
+                if(this.seguridad.servicios[dia].servicio.servicio == ser.numero) {
                   this.cliente = cli;
                   this.servicio = ser;
                   this.servicioText = "";
-                  this.servicioText += seguridad.servicio.cliente + " - " + ser.nombre;
+                  this.servicioText += seguridad.servicios[dia].servicio.cliente + " - " + ser.nombre;
                   this.sinServicio = false;
-                  this.verificarAsistencia(seguridad);
+                  this.verificarAsistencia(seguridad, dia);
                   break;
                 }
               }
@@ -189,8 +252,44 @@ export class HomeGuardiaPage implements OnInit {
     this.nacimiento = await this.storageService.cargarNacimiento();
   }
 
+  async obtenerDias(seguridad: Seguridad, dia: number) {
+    for(var i = 0; i < seguridad.servicios.length; i++) {
+      if(seguridad.servicios[i].servicio.cliente != null) {
+        this.dias[i].hora = seguridad.servicios[i].servicio.horario.hora.toString() 
+        + ":" + seguridad.servicios[i].servicio.horario.minutos.toString();
+        this.dias[i].tiempo = seguridad.servicios[i].servicio.tipo
+      } else {
+        this.dias[i].hora = "NA"
+        this.dias[i].tiempo = 0;
+      }
+    }
+    await this.fireService.getAllClientes().then(res => {
+      res.subscribe(val => {
+        for(var i = 0; i < seguridad.servicios.length; i++) {
+          if(seguridad.servicios[i].servicio.cliente != null) {
+            for(var cli of val) {
+              if(seguridad.servicios[i].servicio.cliente == cli.nombre) {
+                for(var ser of cli.servicios) {
+                  if(this.seguridad.servicios[i].servicio.servicio == ser.numero) {
+                    this.dias[i].servicio = seguridad.servicios[i].servicio.cliente + " - " + ser.nombre;
+                    break;
+                  }
+                }
+                break;
+              }
+            }
+          } else {
+            this.dias[i].servicio = "Sin Servicio"
+          }
+        }
+      });
+    });
+    this.dias[dia].color = "primary";
+    this.dias[dia].dia += " (Hoy)";
+  }
+
   //Metodos de verificacion
-  async verificarAsistencia(seguridad: Seguridad) {
+  async verificarAsistencia(seguridad: Seguridad, dia: number) {
     var fecha = new Date();
     var fecha = new Date();
     var año = fecha.getFullYear();
@@ -201,8 +300,8 @@ export class HomeGuardiaPage implements OnInit {
       res.subscribe(val => {
         for(var asis of val) {
           if(asis.numero == seguridad.numero && asis.dia.toDate().toUTCString() == fecha2.toUTCString()) {
-            if(asis.servicio.cliente == seguridad.servicio.cliente 
-              && asis.servicio.servicio == seguridad.servicio.servicio) {
+            if(asis.servicio.cliente == seguridad.servicios[dia].servicio.cliente 
+              && asis.servicio.servicio == seguridad.servicios[dia].servicio.servicio) {
               this.asistenciaRegistrada = true;
               this.textoBoton = "Ya has registrado tu aistencia de hoy";
               break;
@@ -213,19 +312,19 @@ export class HomeGuardiaPage implements OnInit {
     });
   }
 
-  checarTiempoInicial(seguridad: Seguridad) {
-    if(seguridad.servicio.cliente == null) {
+  checarTiempoInicial(seguridad: Seguridad, dia: number) {
+    if(seguridad.servicios[dia].servicio.cliente == null) {
       return;
     }
     var tiempo = new Date();
     var hora = tiempo.getHours();
     var minutos = tiempo.getMinutes();
-    var horaA = this.seguridad.servicio.horario.hora + 1;
+    var horaA = this.seguridad.servicios[dia].servicio.horario.hora + 1;
 
     if(horaA == 25) {
       horaA = 0;
       if(horaA >= hora) {
-        if(seguridad.servicio.horario.minutos < minutos) {
+        if(seguridad.servicios[dia].servicio.horario.minutos < minutos) {
           this.tiempo = true;
           this.textoBoton = "Ya no puedes registrar asistencia ya que la tolerancia a sido exedida"
         }
@@ -234,7 +333,7 @@ export class HomeGuardiaPage implements OnInit {
     }
 
     if(horaA <= hora) {
-      if(seguridad.servicio.horario.minutos < minutos) {
+      if(seguridad.servicios[dia].servicio.horario.minutos < minutos) {
         this.tiempo = true;
         this.textoBoton = "Ya no puedes registrar asistencia ya que la tolerancia a sido exedida"
       }
@@ -244,16 +343,17 @@ export class HomeGuardiaPage implements OnInit {
   }
 
   checarTiempo() {
-    if(this.seguridad) {
+    if(this.seguridad && this.dia) {
       var tiempo = new Date();
       var hora = tiempo.getHours();
       var minutos = tiempo.getMinutes();
-      var horaA = this.seguridad.servicio.horario.hora + 1;
+      var horaA = this.seguridad.servicios[this.dia].servicio.horario.hora + 1;
 
       if(horaA == 25) {
         horaA = 0;
         if(horaA >= hora) {
-          if(this.seguridad.servicio.horario.minutos < minutos) {
+          if(this.seguridad.servicios[this.dia].servicio.horario.minutos < minutos) {
+            this.modalCtrl.dismiss();
             this.tiempo = true;
             this.textoBoton = "Ya no puedes registrar asistencia ya que la tolerancia a sido exedida"
           }
@@ -262,7 +362,8 @@ export class HomeGuardiaPage implements OnInit {
       }
 
       if(horaA <= hora) {
-        if(this.seguridad.servicio.horario.minutos < minutos) {
+        if(this.seguridad.servicios[this.dia].servicio.horario.minutos < minutos) {
+          this.modalCtrl.dismiss();
           this.tiempo = true;
           this.textoBoton = "Ya no puedes registrar asistencia ya que la tolerancia a sido exedida"
         }
@@ -333,7 +434,7 @@ export class HomeGuardiaPage implements OnInit {
     return;
   }
 
-  //Metodos de la venta e interaccion
+  //Metodos de la ventana e interaccion
   segment(event) {
     switch (event.detail.value) {
 
@@ -343,6 +444,9 @@ export class HomeGuardiaPage implements OnInit {
         this.asignacionesS = false;
         this.titulo = "Informacion General";
         this.icono = "document-text";
+        this.abrirFormulario = false;
+        this.tituloAlerta = "";
+        this.descripcionAlerta = "";
         break;
       }
 
@@ -361,6 +465,9 @@ export class HomeGuardiaPage implements OnInit {
         this.asignacionesS = false;
         this.titulo = "Asignaciones de la Semana";
         this.icono = "calendar"
+        this.abrirFormulario = false;
+        this.tituloAlerta = "";
+        this.descripcionAlerta = "";
         break;
       }
 
@@ -372,9 +479,9 @@ export class HomeGuardiaPage implements OnInit {
       component: RegAsistenciaPage,
       componentProps: {
         servicioText: this.servicioText,
-        hora: this.seguridad.servicio.horario.hora,
-        minutos: this.seguridad.servicio.horario.minutos,
-        servicio: this.seguridad.servicio,
+        hora: this.seguridad.servicios[this.dia].servicio.horario.hora,
+        minutos: this.seguridad.servicios[this.dia].servicio.horario.minutos,
+        servicio: this.seguridad.servicios[this.dia].servicio,
         numero: this.usuario.numero
       }
     });
@@ -384,16 +491,85 @@ export class HomeGuardiaPage implements OnInit {
     this.textoBoton = "Ya has registrado tu aistencia de hoy";
   }
 
+  abrirFormularioReporte() {
+    this.abrirFormulario = true;
+  }
+
+  abrirDia(i: number) {
+    this.dias[i].ver = !this.dias[i].ver;
+    if(this.dias[i].flecha == "arrow-down") {
+      this.dias[i].flecha = "arrow-forward"
+    } else {
+      this.dias[i].flecha = "arrow-down"
+    }
+  }
+
+  //Metodos de reporte
+  cancelarAlerta() {
+    this.abrirFormulario = false;
+    this.tituloAlerta = "";
+    this.descripcionAlerta = "";
+  }
+
+  async enviarAlerta() {
+    await this.fireService.getAllDispositivos().then(res => {
+      res.subscribe(val => {
+        for (var dis of val) {
+          if(dis.numero == this.seguridad.supervisor) {
+            console.log(dis.token);
+            this.pushFire.enviarPush(this.tituloAlerta, this.descripcionAlerta, dis.token, this.servicioText).subscribe();
+            this.accionesService.presentToast("Alerta enviada");
+            this.abrirFormulario = false;
+            this.tituloAlerta = "";
+            this.descripcionAlerta = "";
+            return;
+          }
+        }
+        this.pushFire.enviarPush(this.tituloAlerta, this.descripcionAlerta, "1", this.servicioText);
+        this.accionesService.presentToast("Alerta enviada");
+        this.abrirFormulario = false;
+        this.tituloAlerta = "";
+        this.descripcionAlerta = "";
+        return;
+      });
+    });
+
+    var fecha = new Date();
+    var hora = fecha.getHours();
+    var minutos = fecha.getMinutes();
+    var horario: Hora = {
+      hora: hora,
+      minutos: minutos
+    }
+
+    var incidente: Incidente = {
+      numero: this.usuario.numero,
+      nombre: this.usuario.nombre,
+      servicio: this.servicioText,
+      titulo: this.tituloAlerta,
+      descripcion: this.descripcionAlerta,
+      hora: horario
+    }
+
+    await this.supervisorData.alertas.push(incidente);
+    //@ts-ignore
+    await this.fireService.updateSupervisores(this.supervisorData, this.supervisorData.id);
+    return;
+  }
+
   //Metodos que manejan la navegacion de paginas
   async ionViewDidEnter() {
     this.backButtonSub = this.plt.backButton.subscribeWithPriority( 10000, async () => {
       navigator["app"].exitApp();
     });
-    
-    if(this.leave) {
-      await this.reinicioVariables();
-      await this.obtenerUsuarioLocal();
-      await this.obtenerNacimiento();
+  }
+
+  async ionViewWillEnter() {
+    var fecha = (new Date().getDay()) - 1;
+    this.dia = fecha;
+    await this.reinicioVariables();
+    await this.obtenerUsuarioLocal();
+    await this.obtenerNacimiento();
 
     this.timer = interval(10000);
     this.timerSub = this.timer.subscribe(x => {
@@ -404,10 +580,6 @@ export class HomeGuardiaPage implements OnInit {
           this.checarTiempo();
         }
       }
-      console.log("enviar");
-      this.json.enviarPush().subscribe(val => {
-        console.log(val);
-      });
     });
 
     this.autentificacion = interval(3500);
@@ -415,7 +587,6 @@ export class HomeGuardiaPage implements OnInit {
       console.log("verificar");
       this.cargarUsuarioComparar();
     });
-    }
   }
 
   reinicioVariables() {
@@ -458,7 +629,6 @@ export class HomeGuardiaPage implements OnInit {
     this.autentificacion = null;
     this.autenSub = null;
     this.existe = true;
-    this.leave = false;
 
     this.usuarioFake = {
       contraseña: null,
@@ -475,6 +645,5 @@ export class HomeGuardiaPage implements OnInit {
   async ionViewWillLeave() {
     await this.timerSub.unsubscribe();
     await this.autenSub.unsubscribe();
-    this.leave = true;
   }
 }
