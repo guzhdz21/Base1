@@ -19,6 +19,8 @@ export class HomeRHPage implements OnInit {
     eliminacionConfirmada: boolean = false;
     contraseñaConfirmada: boolean = false;
 
+    textoBuscar = '';
+
     //Variables visuales generales
     titulo: string = "Informacion General";
     icono: string = "document-text";
@@ -137,7 +139,10 @@ export class HomeRHPage implements OnInit {
       this.nacimiento = await this.storageService.cargarNacimiento();
     }
 
-    
+    buscar( event ){
+      this.textoBuscar = event.detail.value;
+    }
+
     async agregarNuevoEmpleado() {
       const modal = await this.modalCtrl.create({
         component: AgregarEmpleadoPage,

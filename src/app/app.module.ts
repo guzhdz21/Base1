@@ -15,6 +15,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { IonicStorageModule } from '@ionic/storage';
 import {Camera} from '@ionic-native/camera/ngx';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,7 +25,8 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
     IonicModule.forRoot(), AppRoutingModule, HttpClientModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    PipesModule
   ],
   providers: [
     StatusBar,

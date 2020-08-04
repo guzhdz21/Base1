@@ -82,9 +82,7 @@
       "cordova-plugin-camera": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },
-      "cordova-plugin-firebasex": {
-        "ANDROID_FIREBASE_ANALYTICS_VERSION": "17.0.0"
-      }
+      "cordova-plugin-firebasex": {}
     },
     "platforms": [
       "android"
