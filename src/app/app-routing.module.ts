@@ -35,6 +35,10 @@ const routes: Routes = [
     path: 'home-rh',
     loadChildren: () => import('./pages/home-rh/home-rh.module').then( m => m.HomeRHPageModule)
   },
+  {
+    path: 'agregar-empleado',
+    loadChildren: () => import('./pages/agregar-empleado/agregar-empleado.module').then( m => m.AgregarEmpleadoPageModule)
+  },
 ];
 
 @NgModule({
