@@ -255,8 +255,11 @@ export class HomeGuardiaPage implements OnInit {
   async obtenerDias(seguridad: Seguridad, dia: number) {
     for(var i = 0; i < seguridad.servicios.length; i++) {
       if(seguridad.servicios[i].servicio.cliente != null) {
-        this.dias[i].hora = seguridad.servicios[i].servicio.horario.hora.toString() 
-        + ":" + seguridad.servicios[i].servicio.horario.minutos.toString();
+        var date = new Date();
+        date.setHours(seguridad.servicios[i].servicio.horario.hora);
+        date.setMinutes(seguridad.servicios[i].servicio.horario.minutos);
+        date.setSeconds(0);
+        this.dias[i].hora = date.toUTCString();
         this.dias[i].tiempo = seguridad.servicios[i].servicio.tipo
       } else {
         this.dias[i].hora = "NA"
