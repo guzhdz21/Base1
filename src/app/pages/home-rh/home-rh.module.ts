@@ -10,6 +10,7 @@ import { HomeRHPage } from './home-rh.page';
 import { ComponentsModule } from '../../components/components.module';
 import { AgregarEmpleadoPage } from '../agregar-empleado/agregar-empleado.page';
 import { AgregarEmpleadoPageModule } from '../agregar-empleado/agregar-empleado.module';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   entryComponents: [
@@ -21,7 +22,8 @@ import { AgregarEmpleadoPageModule } from '../agregar-empleado/agregar-empleado.
     IonicModule,
     HomeRHPageRoutingModule,
     ComponentsModule,
-    AgregarEmpleadoPageModule
+    AgregarEmpleadoPageModule,
+    PipesModule
   ],
   declarations: [HomeRHPage]
 })
