@@ -44,6 +44,28 @@ export class MenuComponent implements OnInit {
             irA: '/login'
           },
         ];
+        break;
+      }
+
+      case 'supervisor': {
+        this.opciones = [
+          {
+            icono: 'warning',
+            nombre: 'Alertas Incidentes',
+            irA: '/login'
+          },
+          {
+            icono: 'location',
+            nombre: 'Ubicacion guardias',
+            irA: '/login'
+          },
+          {
+            icono: 'log-out-outline',
+            nombre: 'Cerrar Sesion',
+            irA: '/login'
+          }
+        ];
+        break;
       }
 
     }

@@ -6,6 +6,7 @@ import { HeaderGeneralComponent } from './header-general/header-general.componen
 import { HeaderMenuComponent } from './header-menu/header-menu.component';
 import { MenuComponent } from './menu/menu.component';
 import { HeaderModalComponent } from './header-modal/header-modal.component';
+import { SkeletonComponent } from './skeleton/skeleton.component';
 
 
 
@@ -15,14 +16,16 @@ import { HeaderModalComponent } from './header-modal/header-modal.component';
     HeaderGeneralComponent,
     HeaderMenuComponent,
     MenuComponent,
-    HeaderModalComponent
+    HeaderModalComponent,
+    SkeletonComponent
   ], 
   exports: [
     BotonInfoComponent,
     HeaderGeneralComponent,
     HeaderMenuComponent,
     MenuComponent,
-    HeaderModalComponent
+    HeaderModalComponent,
+    SkeletonComponent
   ],
   imports: [
     CommonModule,

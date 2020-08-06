@@ -116,7 +116,7 @@ export class LoginPage implements OnInit {
         break;
       }
       case 'Supervisor' : {
-        this.router.navigate(["/home"]);
+        this.router.navigate(["/home-supervisor"]);
         break;
       }
     }

@@ -21,6 +21,7 @@ export class HomeGuardiaPage implements OnInit {
   asignacionesS: boolean = false;
   titulo: string = "Informacion General";
   icono: string = "document-text";
+  skeleton: boolean = true;
 
   //Variables visuales de asistencia
   textoBoton: string = "";
@@ -590,6 +591,9 @@ export class HomeGuardiaPage implements OnInit {
       console.log("verificar");
       this.cargarUsuarioComparar();
     });
+    
+    await this.delay(2000);
+    this.skeleton = false;
   }
 
   reinicioVariables() {
@@ -643,6 +647,10 @@ export class HomeGuardiaPage implements OnInit {
 
     this.user = null;
     return;
+  }
+
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
   async ionViewWillLeave() {

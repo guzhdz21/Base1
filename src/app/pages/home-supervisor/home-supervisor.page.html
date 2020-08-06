@@ -1,0 +1,28 @@
+<app-header-menu titulo="Global Fhas" tipo="supervisor"></app-header-menu>
+
+<ion-content>
+  <ion-toolbar>
+    <ion-segment (ionChange)="segment($event)" value="Informacion">
+        <ion-segment-button value="Informacion">
+          <ion-label>Informacion</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="Asignaciones">
+          <ion-label>Asignaciones</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="Asistencias">
+            <ion-label>Asistencias</ion-label>
+          </ion-segment-button>
+      </ion-segment>
+  </ion-toolbar>
+
+  <ion-item lines="none"> 
+    <ion-badge color="primary" class="centrari">{{titulo}}</ion-badge>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
+  </ion-item>
+
+</ion-content>
