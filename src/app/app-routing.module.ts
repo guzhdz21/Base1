@@ -42,6 +42,10 @@ const routes: Routes = [
     path: 'home-supervisor',
     loadChildren: () => import('./pages/home-supervisor/home-supervisor.module').then( m => m.HomeSupervisorPageModule)
   },
+  {
+    path: 'home-cabina',
+    loadChildren: () => import('./pages/home-cabina/home-cabina.module').then( m => m.HomeCabinaPageModule)
+  },
 
 ];
 
