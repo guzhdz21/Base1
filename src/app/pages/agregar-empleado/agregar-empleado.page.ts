@@ -13,9 +13,10 @@ export class AgregarEmpleadoPage implements OnInit {
   }
 
   tipoEmpleado: string;
+  hola: number;
 
-  tipoDeEmpleado(){
-    
+  tipoDeEmpleado(event){
+    this.tipoEmpleado = event.detail.value;
   }
 
 }
