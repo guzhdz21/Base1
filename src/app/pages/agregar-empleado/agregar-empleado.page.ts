@@ -12,4 +12,10 @@ export class AgregarEmpleadoPage implements OnInit {
   ngOnInit() {
   }
 
+  tipoEmpleado: string;
+
+  tipoDeEmpleado(){
+    
+  }
+
 }
