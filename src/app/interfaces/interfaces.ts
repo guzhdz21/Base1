@@ -16,7 +16,21 @@ export interface Usuario {
 
 export interface Seguridad {
     numero: number;
+    nombre: string;
+    fechaDeIngreso: Date;
+    fechaDeNacimiento: Date;
     papeleria: number;
+    CURP: string;
+    RFC: string;
+    NSS: string;
+    actaDeNacimiento: string;
+    ComprobanteDeEstudios: string;
+    ComprobanteDeDomicilio: string;
+    INE: boolean;
+    contrato: boolean;
+    domicilio: string;
+    cartaDePolicia: string;
+    activo: boolean;
     servicios: Asignacion[];
     supervisor: number;
 }
