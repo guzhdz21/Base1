@@ -11,15 +11,47 @@ import { Usuario } from '../../interfaces/interfaces';
 export class MenuComponent implements OnInit {
 
   @Input() tipo: string;
-  opciones = [];
-  nombre: string = "";
+  @Input() nombre: string;
   usuario: Usuario;
+
+  guardia = [
+    {
+      icono: 'log-out-outline',
+      nombre: 'Cerrar Sesion',
+      irA: '/login'
+    },
+  ];
+
+  supervisor = [
+    {
+      icono: 'warning',
+      nombre: 'Alertas Incidentes',
+      irA: '/login'
+    },
+    {
+      icono: 'location',
+      nombre: 'Ubicacion guardias',
+      irA: '/login'
+    },
+    {
+      icono: 'log-out-outline',
+      nombre: 'Cerrar Sesion',
+      irA: '/login'
+    }
+  ];
+
+  cabina = [
+    {
+      icono: 'log-out-outline',
+      nombre: 'Cerrar Sesion',
+      irA: '/login'
+    },
+  ];
 
   constructor(private storage: StorageService,
               private router: Router,) { }
 
   async ngOnInit() {
-    await this.cargarUsuario();
   }
 
   async redirigir(nombre: string, irA: string) {
@@ -27,47 +59,5 @@ export class MenuComponent implements OnInit {
       await this.storage.eliminarUsuario();
     }
     await this.router.navigate([irA]);
-  }
-
-  async cargarUsuario() {
-    await this.storage.cargarUsuario().then(res => {
-      this.usuario = res;
-      this.nombre = res.nombre;
-    });
-    switch(this.tipo) {
-
-      case 'guardia': {
-        this.opciones = [
-          {
-            icono: 'log-out-outline',
-            nombre: 'Cerrar Sesion',
-            irA: '/login'
-          },
-        ];
-        break;
-      }
-
-      case 'supervisor': {
-        this.opciones = [
-          {
-            icono: 'warning',
-            nombre: 'Alertas Incidentes',
-            irA: '/login'
-          },
-          {
-            icono: 'location',
-            nombre: 'Ubicacion guardias',
-            irA: '/login'
-          },
-          {
-            icono: 'log-out-outline',
-            nombre: 'Cerrar Sesion',
-            irA: '/login'
-          }
-        ];
-        break;
-      }
-
-    }
   }
 }

@@ -125,7 +125,8 @@ export class RegAsistenciaPage implements OnInit {
       horario: horario,
       numero: this.numero,
       servicio: this.servicio,
-      retardo: retardo
+      retardo: retardo,
+      valido: false
     }
     await this.fireService.addAsistencias(asistencia);
     this.modalCtrl.dismiss( {

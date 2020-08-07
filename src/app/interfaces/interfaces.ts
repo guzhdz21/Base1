@@ -16,10 +16,13 @@ export interface Usuario {
 
 export interface Seguridad {
     numero: number;
-    nombre: string;
+    papeleria: Papeleria;
+    servicios: Asignacion[];
+    supervisor: number;
+}
+
+export interface Papeleria {
     fechaDeIngreso: Date;
-    fechaDeNacimiento: Date;
-    papeleria: number;
     CURP: string;
     RFC: string;
     NSS: string;
@@ -30,9 +33,6 @@ export interface Seguridad {
     contrato: boolean;
     domicilio: string;
     cartaDePolicia: string;
-    activo: boolean;
-    servicios: Asignacion[];
-    supervisor: number;
 }
 
 export interface recursosHumanos {
@@ -54,6 +54,7 @@ export interface Asistencia {
     numero: number;
     servicio: ServicioA;
     retardo: boolean;
+    valido: boolean;
 }
 
 export interface Cliente {

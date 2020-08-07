@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../../services/storage.service';
-import { Usuario } from '../../interfaces/interfaces';
+import { Usuario, Seguridad, Asignacion } from '../../interfaces/interfaces';
 import { Router } from '@angular/router';
 import { FireService } from '../../services/fire.service';
 import { Subscription, interval } from 'rxjs';
@@ -51,6 +51,7 @@ export class BienvenidaPage implements OnInit {
         this.timerSub.unsubscribe();
       }
     });
+
   }
 
   async obtenerUsuarioLocal() {

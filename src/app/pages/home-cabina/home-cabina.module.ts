@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { HomeCabinaPageRoutingModule } from './home-cabina-routing.module';
 
 import { HomeCabinaPage } from './home-cabina.page';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomeCabinaPageRoutingModule
+    HomeCabinaPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [HomeCabinaPage]
 })

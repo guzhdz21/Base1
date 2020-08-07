@@ -9,6 +9,7 @@ export class HeaderMenuComponent implements OnInit {
 
   @Input() titulo: string;
   @Input() tipo: string;
+  @Input() nombre: string;
   constructor() { }
 
   ngOnInit() {}

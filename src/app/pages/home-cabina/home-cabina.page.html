@@ -1,9 +1,25 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>home-cabina</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header-menu titulo="Global Fhas" tipo="cabina" [nombre]="usuario.nombre"></app-header-menu>
 
 <ion-content>
+  <ion-toolbar>
+    <ion-segment (ionChange)="segment($event)" value="Matutino">
+        <ion-segment-button value="Matutino">
+          <ion-label>Matutino</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="Nocturno">
+          <ion-label>Nocturno</ion-label>
+        </ion-segment-button>
+
+      </ion-segment>
+  </ion-toolbar>
+
+  <ion-item lines="none"> 
+    <ion-badge color="primary" class="centrari">{{titulo}}</ion-badge>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
+  </ion-item>
 
 </ion-content>

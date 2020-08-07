@@ -293,7 +293,7 @@ export class HomeGuardiaPage implements OnInit {
   }
 
   //Metodos de verificacion
-  async verificarAsistencia(seguridad: Seguridad, dia: number) {
+  async verificarAsistencia(seguridad: Seguridad, dia2: number) {
     var fecha = new Date();
     var fecha = new Date();
     var año = fecha.getFullYear();
@@ -304,8 +304,9 @@ export class HomeGuardiaPage implements OnInit {
       res.subscribe(val => {
         for(var asis of val) {
           if(asis.numero == seguridad.numero && asis.dia.toDate().toUTCString() == fecha2.toUTCString()) {
-            if(asis.servicio.cliente == seguridad.servicios[dia].servicio.cliente 
-              && asis.servicio.servicio == seguridad.servicios[dia].servicio.servicio) {
+            console.log(dia2);
+            if(asis.servicio.cliente == seguridad.servicios[dia2].servicio.cliente 
+              && asis.servicio.servicio == seguridad.servicios[dia2].servicio.servicio) {
               this.asistenciaRegistrada = true;
               this.textoBoton = "Ya has registrado tu aistencia de hoy";
               break;

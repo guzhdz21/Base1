@@ -1,13 +1,12 @@
+<app-menu [tipo]="tipo" [nombre]="nombre"></app-menu>
+<ion-router-outlet [id]="tipo"></ion-router-outlet>
 <ion-header no-border>
   <ion-toolbar color="primary">
 
     <ion-buttons slot="start">
-      <ion-menu-button menu="MenuPrincipal"></ion-menu-button>
+      <ion-menu-button [menu]="tipo"></ion-menu-button>
     </ion-buttons>
 
     <ion-title>{{titulo}}</ion-title>
   </ion-toolbar>
 </ion-header>
-
-<app-menu [tipo]="tipo"></app-menu>
-<ion-router-outlet id="Principal"></ion-router-outlet>
