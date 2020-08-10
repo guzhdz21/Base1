@@ -42,6 +42,13 @@ export class HomeRHPage implements OnInit {
       nombre: null,
       numero: null,
       tipo: null,
+      fechaDeIngreso: null,
+      domicilio: null,
+      celular: null,
+      CURP: null,
+      RFC: null,
+      NSS: null,
+      papeleria: null
     }
 
     id: string = null;
@@ -58,6 +65,13 @@ export class HomeRHPage implements OnInit {
       nombre: null,
       numero: null,
       tipo: null,
+      fechaDeIngreso: null,
+      domicilio: null,
+      celular: null,
+      CURP: null,
+      RFC: null,
+      NSS: null,
+      papeleria: null
     }
   
     user: Usuario;

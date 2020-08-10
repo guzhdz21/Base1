@@ -14,6 +14,7 @@ export interface Usuario {
     tipo: string;
     fechaDeIngreso: Date;
     domicilio: string;
+    celular: number;
     CURP: string;
     RFC: string;
     NSS: string;

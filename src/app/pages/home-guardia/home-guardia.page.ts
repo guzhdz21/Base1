@@ -119,6 +119,13 @@ export class HomeGuardiaPage implements OnInit {
     nombre: null,
     numero: null,
     tipo: null,
+    fechaDeIngreso: null,
+    domicilio: null,
+    celular: null,
+    CURP: null,
+    RFC: null,
+    NSS: null,
+    papeleria: null
   }
   seguridad: Seguridad;
   cliente: Cliente;
@@ -140,6 +147,13 @@ export class HomeGuardiaPage implements OnInit {
     nombre: null,
     numero: null,
     tipo: null,
+    fechaDeIngreso: null,
+    domicilio: null,
+    celular: null,
+    CURP: null,
+    RFC: null,
+    NSS: null,
+    papeleria: null
   }
 
   user: Usuario;
@@ -633,6 +647,13 @@ export class HomeGuardiaPage implements OnInit {
       nombre: null,
       numero: null,
       tipo: null,
+      fechaDeIngreso: null,
+      domicilio: null,
+      celular: null,
+      CURP: null,
+      RFC: null,
+      NSS: null,
+      papeleria: null
     }
     this.seguridad = null;
     this.cliente = null;
@@ -650,6 +671,13 @@ export class HomeGuardiaPage implements OnInit {
       nombre: null,
       numero: null,
       tipo: null,
+      fechaDeIngreso: null,
+      domicilio: null,
+      celular: null,
+      CURP: null,
+      RFC: null,
+      NSS: null,
+      papeleria: null
     }
 
     this.user = null;
