@@ -182,6 +182,9 @@ export class HomeGuardiaPage implements OnInit {
           if(usuario.numero == seg.numero) {
             this.seguridad = seg;
             var fecha = (new Date().getDay()) - 1;
+            if(fecha == -1) {
+              fecha = 6;
+            }
             this.horasS = seg.servicios[fecha].servicio.tipo;
             this.obtenerSupervisor(seg);
             this.obtenerClientes(seg, fecha);
@@ -571,6 +574,9 @@ export class HomeGuardiaPage implements OnInit {
 
   async ionViewWillEnter() {
     var fecha = (new Date().getDay()) - 1;
+    if(fecha == -1) {
+      fecha = 6;
+    }
     this.dia = fecha;
     await this.reinicioVariables();
     await this.obtenerUsuarioLocal();

@@ -46,6 +46,10 @@ const routes: Routes = [
     path: 'home-cabina',
     loadChildren: () => import('./pages/home-cabina/home-cabina.module').then( m => m.HomeCabinaPageModule)
   },
+  {
+    path: 'asistencia-info1',
+    loadChildren: () => import('./pages/asistencia-info1/asistencia-info1.module').then( m => m.AsistenciaInfo1PageModule)
+  },
 
 ];
 

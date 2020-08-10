@@ -8,3 +8,7 @@ ion-badge {
     width: 80%;
     height: 80%;
 }
+
+.ion-item {
+    --border-color: var(--ion-color-primary) !important;
+}

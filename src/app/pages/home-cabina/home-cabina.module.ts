@@ -8,14 +8,20 @@ import { HomeCabinaPageRoutingModule } from './home-cabina-routing.module';
 
 import { HomeCabinaPage } from './home-cabina.page';
 import { ComponentsModule } from '../../components/components.module';
+import { AsistenciaInfo1Page } from '../asistencia-info1/asistencia-info1.page';
+import { AsistenciaInfo1PageModule } from '../asistencia-info1/asistencia-info1.module';
 
 @NgModule({
+  entryComponents: [
+    AsistenciaInfo1Page
+  ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     HomeCabinaPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    AsistenciaInfo1PageModule
   ],
   declarations: [HomeCabinaPage]
 })

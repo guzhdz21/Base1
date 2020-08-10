@@ -3,8 +3,9 @@ import { Subscription, interval } from 'rxjs';
 import { Usuario, Seguridad } from '../../interfaces/interfaces';
 import { StorageService } from '../../services/storage.service';
 import { FireService } from '../../services/fire.service';
-import { NavController, Platform } from '@ionic/angular';
+import { NavController, Platform, ModalController } from '@ionic/angular';
 import { AccionesService } from '../../services/acciones.service';
+import { AsistenciaInfo1Page } from '../asistencia-info1/asistencia-info1.page';
 
 @Component({
   selector: 'app-home-cabina',
@@ -16,6 +17,8 @@ export class HomeCabinaPage implements OnInit {
   //Variables visuales generales
   titulo: string = "Turno Matutino";
   icono = "sunny";
+  fecha: number = 1;
+  carga = false;
 
   //Variables de funcionalidad
   backButtonSub: Subscription;
@@ -47,7 +50,8 @@ export class HomeCabinaPage implements OnInit {
               private fireService: FireService,
               private navCtrl: NavController,
               private accionesService: AccionesService,
-              private plt: Platform) { }
+              private plt: Platform,
+              private modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
@@ -74,11 +78,13 @@ export class HomeCabinaPage implements OnInit {
   async obtenerSeguridad() {
     await this.fireService.getAllSeguridad().then(res => {
       res.subscribe(val => {
+        this.guardias = [];
         for (var seg of val) {
           this.obtenerSeguridad2(seg);
         }
       });
     });
+    this.carga = true;
     return;
   }
 
@@ -100,6 +106,9 @@ export class HomeCabinaPage implements OnInit {
     var fecha = new Date();
     await this.fireService.getAllAsistencias().then(res => {
       res.subscribe(val => {
+        if(this.guardias.length != 0 && this.guardias[0].usuario.numero == seguridad.numero) {
+          this.guardias = [];
+        }
         for (var asis of val) {
           if(asis.dia.toDate().getDate() == fecha.getDate() 
           && asis.dia.toDate().getMonth() == fecha.getMonth() 
@@ -108,7 +117,7 @@ export class HomeCabinaPage implements OnInit {
             var guardia = {
               seguridad: seguridad,
               usuario: usuario,
-              asistecia: asis
+              asistencia: asis,
             };
             this.guardias.push(guardia);
             return;
@@ -117,7 +126,7 @@ export class HomeCabinaPage implements OnInit {
         var guardia2 = {
           seguridad: seguridad,
           usuario: usuario,
-          asistecia: null
+          asistencia: null,
         };
         this.guardias.push(guardia2);
       });
@@ -203,6 +212,23 @@ export class HomeCabinaPage implements OnInit {
     }
   }
 
+  async abrirAsistencia(i) {
+    console.log("entre");
+    if( this.guardias[i].asistencia != null) {
+      const modal = await this.modalCtrl.create({
+        component: AsistenciaInfo1Page,
+        componentProps: {
+          asistencia: this.guardias[i].asistencia,
+          usuario: this.guardias[i].usuario,
+          seguridad: this.guardias[i].seguridad,
+          id: this.guardias[i].asistencia.id
+        }
+      });
+      await modal.present();
+      await modal.onDidDismiss();
+    }
+  }
+
   //Metodos de entrada y salida
   async ionViewDidEnter() {
     this.backButtonSub = this.plt.backButton.subscribeWithPriority( 10000, async () => {
@@ -211,6 +237,11 @@ export class HomeCabinaPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+    this.fecha = new Date().getDay() - 1 ;
+    if(this.fecha == -1) {
+      this.fecha = 6;
+    }
+    console.log(this.fecha);
 
     await this.reinicioVariables();
     await this.obtenerUsuarioLocal();
@@ -221,7 +252,6 @@ export class HomeCabinaPage implements OnInit {
       console.log("verificar");
       this.cargarUsuarioComparar();
     });
-    console.log(this.guardias);
   }
 
   async ionViewWillLeave() {
