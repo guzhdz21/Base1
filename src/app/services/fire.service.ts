@@ -170,6 +170,11 @@ export class FireService {
     return this.asistenciasColletion.add(asistencia);
   }
 
+  async updateAsistencias(asistencia: Asistencia, id: string) {
+    await this.fireAsistencias();
+    return this.asistenciasColletion.doc(id).update(asistencia);
+  }
+
   fireDispositivos() {
     this.dispositivosColletion = this.db.collection<Dispositivo>('dispositivos');
 

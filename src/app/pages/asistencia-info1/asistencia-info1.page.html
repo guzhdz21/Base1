@@ -1,5 +1,73 @@
 <app-header-modal titulo="Informacion Asistencia" ruta="home-cabina"></app-header-modal>
 
 <ion-content>
+    <ion-item lines="none"> 
+        <ion-label class="explicacion ion-text-wrap">Informacion sobre el servicio y asistencia del elemento
+        </ion-label>
+      </ion-item>
+    
+      <ion-icon name="document-text" color="primary" class="centrari icono1"></ion-icon>
 
+      <ion-list>
+
+        <ion-item>
+            <ion-label color="primary">Numero:</ion-label>
+            <ion-label class="margentexto ion-text-wrap">{{usuario.numero}}</ion-label>
+        </ion-item>
+
+        <ion-item color="light">
+            <ion-label color="primary">Nombre:</ion-label>
+            <ion-label class="margentexto ion-text-wrap">{{usuario.nombre}}</ion-label>
+        </ion-item>
+
+        <ion-item >
+            <ion-label color="primary">Supervisor:</ion-label>
+            <ion-label class="margentexto ion-text-wrap">{{supervisor}}</ion-label>
+        </ion-item>
+
+        <ion-item color="light">
+            <ion-label color="primary">Servicio:</ion-label>
+            <ion-label class="margentexto ion-text-wrap">{{serviciotText}}</ion-label>
+        </ion-item>
+
+        <ion-item>
+            <ion-label color="primary">Hora Asignada:</ion-label>
+            <ion-datetime class="margentexto"
+                          displayFormat="HH:mm"
+                          [value]="horario"
+                          readonly="true">
+                        </ion-datetime>
+        </ion-item>
+        
+        <ion-item color="light">
+            <ion-label color="primary">Hora Registrada:</ion-label>
+            <ion-datetime class="margentexto"
+                          displayFormat="HH:mm"
+                          [value]="horario2"
+                          readonly="true">
+                        </ion-datetime>
+        </ion-item>  
+
+        <ion-item>
+            <ion-label color="primary">Retardo:</ion-label>
+            <ion-label class="margentexto ion-text-wrap" *ngIf="asistencia.retardo">Si</ion-label>
+            <ion-label class="margentexto ion-text-wrap" *ngIf="!asistencia.retardo">No</ion-label>
+        </ion-item>
+
+        <ion-item color="light">
+            <ion-label color="primary">Validacion:</ion-label>
+            <ion-label class="margentexto ion-text-wrap" *ngIf="asistencia.valido">Validada</ion-label>
+            <ion-label class="margentexto ion-text-wrap" *ngIf="!asistencia.valido">No validada</ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-item *ngIf="asistencia.valido" lines="none">
+        <ion-label class="centrar ion-text-wrap textoExtra">
+          Asistencia validada
+        </ion-label>
+      </ion-item>
+
+      <ion-button class="centrari boton1" 
+                  [disabled]="asistencia.valido"
+                  (click)="validarAsistencia()">Validar Asistencia</ion-button>
 </ion-content>

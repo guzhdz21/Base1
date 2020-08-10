@@ -227,7 +227,6 @@ export class HomeCabinaPage implements OnInit {
   }
 
   async abrirAsistencia(i) {
-    console.log("entre");
     if( this.guardias[i].asistencia != null) {
       const modal = await this.modalCtrl.create({
         component: AsistenciaInfo1Page,
@@ -240,6 +239,8 @@ export class HomeCabinaPage implements OnInit {
       });
       await modal.present();
       await modal.onDidDismiss();
+    } else {
+      this.accionesService.presentToast("El elemento no tiene registro de asistencia");
     }
   }
 
@@ -255,7 +256,6 @@ export class HomeCabinaPage implements OnInit {
     if(this.fecha == -1) {
       this.fecha = 6;
     }
-    console.log(this.fecha);
 
     await this.reinicioVariables();
     await this.obtenerUsuarioLocal();
