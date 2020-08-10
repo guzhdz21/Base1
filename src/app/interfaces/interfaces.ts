@@ -12,27 +12,18 @@ export interface Usuario {
     nombre: string;
     numero: number;
     tipo: string;
+    fechaDeIngreso: Date;
+    domicilio: string;
+    CURP: string;
+    RFC: string;
+    NSS: string;
+    papeleria: boolean;
 }
 
 export interface Seguridad {
     numero: number;
-    papeleria: Papeleria;
     servicios: Asignacion[];
     supervisor: number;
-}
-
-export interface Papeleria {
-    fechaDeIngreso: Date;
-    CURP: string;
-    RFC: string;
-    NSS: string;
-    actaDeNacimiento: string;
-    ComprobanteDeEstudios: string;
-    ComprobanteDeDomicilio: string;
-    INE: boolean;
-    contrato: boolean;
-    domicilio: string;
-    cartaDePolicia: string;
 }
 
 export interface recursosHumanos {

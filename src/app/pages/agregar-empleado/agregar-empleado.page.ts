@@ -13,10 +13,15 @@ export class AgregarEmpleadoPage implements OnInit {
   }
 
   tipoEmpleado: string;
+  papeleriaOpcion: number;
   hola: number;
 
   tipoDeEmpleado(event){
     this.tipoEmpleado = event.detail.value;
+  }
+
+  radios(event){
+    this.papeleriaOpcion = event.detail.value;
   }
 
 }

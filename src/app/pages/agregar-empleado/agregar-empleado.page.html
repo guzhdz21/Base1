@@ -13,6 +13,19 @@
             </ion-select>
         </ion-item>
 
+
+        <ion-item>
+    
+            <ion-label>Numero de empleado</ion-label>
+    
+                <ion-input type="text"
+                    [(ngModel)]="hola"
+                    name="nombre"
+                    required>
+                </ion-input>
+
+        </ion-item>
+
         <ion-item>
     
             <ion-label>Nombre</ion-label>
@@ -22,7 +35,102 @@
                     name="nombre"
                     required>
                 </ion-input>
+
         </ion-item>
+
+        <ion-item>
+    
+            <ion-label>Fecha de nacimiento</ion-label>
+    
+                <ion-input type="text"
+                    [(ngModel)]="hola"
+                    name="nombre"
+                    required>
+                </ion-input>
+
+        </ion-item>
+
+        <ion-item>
+    
+            <ion-label>Domicilio</ion-label>
+    
+                <ion-input type="text"
+                    [(ngModel)]="hola"
+                    name="nombre"
+                    required>
+                </ion-input>
+
+        </ion-item>
+
+        <ion-item>
+    
+            <ion-label>Celular</ion-label>
+    
+                <ion-input type="text"
+                    [(ngModel)]="hola"
+                    name="nombre"
+                    required>
+                </ion-input>
+
+        </ion-item>
+
+        <ion-item>
+    
+            <ion-label>CURP</ion-label>
+    
+            <ion-input type="text"
+                [(ngModel)]="hola"
+                name="nombre"
+                required>
+            </ion-input>
+
+        </ion-item>
+
+        <ion-item>
+    
+            <ion-label>RFC</ion-label>
+    
+            <ion-input type="text"
+                [(ngModel)]="hola"
+                name="nombre"
+                required>
+            </ion-input>
+
+        </ion-item>
+
+        <ion-item>
+    
+            <ion-label>NSS</ion-label>
+    
+            <ion-input type="text"
+                [(ngModel)]="hola"
+                name="nombre"
+                required>
+            </ion-input>
+
+        </ion-item>
+
+        <ion-item>
+    
+            <ion-label>Estado de papeleria</ion-label>
+
+            <ion-radio-group required (ionChange)="radios($event)">
+                    <ion-item lines="none">
+                        <ion-radio color="success" value="completa"></ion-radio>
+                            <ion-label class="margen_izquierda_15">Completa</ion-label>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-radio color="danger" value="incompleta"></ion-radio>
+                            <ion-label class="margen_izquierda_15">Incompleta</ion-label>
+                    </ion-item>
+            </ion-radio-group>
+
+        </ion-item>
+
+    <div *ngIf="tipoEmpleado =='Elemento'">
+
+    </div>
+
 
     </ion-list>
 
