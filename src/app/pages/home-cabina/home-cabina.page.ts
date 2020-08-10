@@ -32,6 +32,13 @@ export class HomeCabinaPage implements OnInit {
     nombre: null,
     numero: null,
     tipo: null,
+    fechaDeIngreso: null,
+    domicilio: null,
+    celular: null,
+    CURP: null,
+    RFC: null,
+    NSS: null,
+    papeleria: null
   }
 
   //Variables de los datos del usuario
@@ -42,6 +49,13 @@ export class HomeCabinaPage implements OnInit {
     nombre: null,
     numero: null,
     tipo: null,
+    fechaDeIngreso: null,
+    domicilio: null,
+    celular: null,
+    CURP: null,
+    RFC: null,
+    NSS: null,
+    papeleria: null
   }
   id: string = null;
   guardias: any[] = [];
@@ -267,6 +281,13 @@ export class HomeCabinaPage implements OnInit {
       nombre: null,
       numero: null,
       tipo: null,
+      fechaDeIngreso: null,
+      domicilio: null,
+      celular: null,
+      CURP: null,
+      RFC: null,
+      NSS: null,
+      papeleria: null
     }
     this.id = null;
 
@@ -280,6 +301,13 @@ export class HomeCabinaPage implements OnInit {
       nombre: null,
       numero: null,
       tipo: null,
+      fechaDeIngreso: null,
+      domicilio: null,
+      celular: null,
+      CURP: null,
+      RFC: null,
+      NSS: null,
+      papeleria: null
     }
     this.user = null;
     return;

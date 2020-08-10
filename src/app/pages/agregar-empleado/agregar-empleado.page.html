@@ -5,10 +5,10 @@
     <ion-list>
         <ion-item>
             <ion-label class="ion-text-wrap">Tipo de empleado</ion-label>
-            <ion-select interface="popover" [(ngModel)] = "tipoEmpleado" (ionChange)="tipoDeEmpleado($event)">
+            <ion-select interface="popover" [(ngModel)] = "this.usuarioAgregar.tipo" (ionChange)="tipoDeEmpleado($event)">
                 <ion-select-option value="Elemento">Elemento de seguridad</ion-select-option>
-                <ion-select-option value="RH">Recursos humanos</ion-select-option>
                 <ion-select-option value="Supervisor">Supervisor</ion-select-option>
+                <ion-select-option value="RH">Recursos humanos</ion-select-option>
                 <ion-select-option value="Directivo">Directivo</ion-select-option>
             </ion-select>
         </ion-item>
@@ -18,9 +18,9 @@
     
             <ion-label>Numero de empleado</ion-label>
     
-                <ion-input type="text"
-                    [(ngModel)]="hola"
-                    name="nombre"
+                <ion-input type="number"
+                    [(ngModel)]="this.usuarioAgregar.numero"
+                    name="numero"
                     required>
                 </ion-input>
 
@@ -31,7 +31,7 @@
             <ion-label>Nombre</ion-label>
     
                 <ion-input type="text"
-                    [(ngModel)]="hola"
+                    [(ngModel)]="this.usuarioAgregar.nombre"
                     name="nombre"
                     required>
                 </ion-input>
@@ -40,11 +40,11 @@
 
         <ion-item>
     
-            <ion-label>Fecha de nacimiento</ion-label>
+            <ion-label>Fecha de nacimiento: </ion-label>
     
-                <ion-input type="text"
-                    [(ngModel)]="hola"
-                    name="nombre"
+                <ion-input type="date"
+                    [(ngModel)]="this.usuarioAgregar.nacimiento"
+                    name="nacimiento"
                     required>
                 </ion-input>
 
@@ -55,8 +55,8 @@
             <ion-label>Domicilio</ion-label>
     
                 <ion-input type="text"
-                    [(ngModel)]="hola"
-                    name="nombre"
+                    [(ngModel)]="this.usuarioAgregar.domicilio"
+                    name="domicilio"
                     required>
                 </ion-input>
 
@@ -66,9 +66,9 @@
     
             <ion-label>Celular</ion-label>
     
-                <ion-input type="text"
-                    [(ngModel)]="hola"
-                    name="nombre"
+                <ion-input type="number"
+                    [(ngModel)]="this.usuarioAgregar.celular"
+                    name="celular"
                     required>
                 </ion-input>
 
@@ -79,8 +79,8 @@
             <ion-label>CURP</ion-label>
     
             <ion-input type="text"
-                [(ngModel)]="hola"
-                name="nombre"
+                [(ngModel)]="this.usuarioAgregar.CURP"
+                name="CURP"
                 required>
             </ion-input>
 
@@ -91,8 +91,8 @@
             <ion-label>RFC</ion-label>
     
             <ion-input type="text"
-                [(ngModel)]="hola"
-                name="nombre"
+                [(ngModel)]="this.usuarioAgregar.RFC"
+                name="RFC"
                 required>
             </ion-input>
 
@@ -103,34 +103,35 @@
             <ion-label>NSS</ion-label>
     
             <ion-input type="text"
-                [(ngModel)]="hola"
-                name="nombre"
+                [(ngModel)]="this.usuarioAgregar.NSS"
+                name="NSS"
                 required>
             </ion-input>
 
         </ion-item>
 
-        <ion-item>
+        <ion-item lines="none">
     
             <ion-label>Estado de papeleria</ion-label>
 
             <ion-radio-group required (ionChange)="radios($event)">
                     <ion-item lines="none">
-                        <ion-radio color="success" value="completa"></ion-radio>
+                        <ion-radio color="success" value="true"></ion-radio>
                             <ion-label class="margen_izquierda_15">Completa</ion-label>
                     </ion-item>
                     <ion-item lines="none">
-                        <ion-radio color="danger" value="incompleta"></ion-radio>
+                        <ion-radio color="danger" value="false"></ion-radio>
                             <ion-label class="margen_izquierda_15">Incompleta</ion-label>
                     </ion-item>
             </ion-radio-group>
 
         </ion-item>
 
-    <div *ngIf="tipoEmpleado =='Elemento'">
+    <div *ngIf="this.usuarioAgregar.tipo =='Elemento'">
 
     </div>
 
+        <ion-button expand="full" (click)="agregarNuevoEmpleado()" class="botonAgregarEmpleado">Agregar Empleado</ion-button>
 
     </ion-list>
 

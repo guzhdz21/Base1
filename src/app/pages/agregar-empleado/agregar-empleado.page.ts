@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Usuario } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-agregar-empleado',
@@ -12,16 +13,31 @@ export class AgregarEmpleadoPage implements OnInit {
   ngOnInit() {
   }
 
-  tipoEmpleado: string;
-  papeleriaOpcion: number;
-  hola: number;
+  usuarioAgregar: Usuario = {
+    contraseña: null,
+    nacimiento: null,
+    nombre: null,
+    numero: null,
+    tipo: null,
+    fechaDeIngreso: null,
+    domicilio: null,
+    celular: null,
+    CURP: null,
+    RFC: null,
+    NSS: null,
+    papeleria: null
+  }
 
   tipoDeEmpleado(event){
-    this.tipoEmpleado = event.detail.value;
+    this.usuarioAgregar.tipo = event.detail.value;
   }
 
   radios(event){
-    this.papeleriaOpcion = event.detail.value;
+    this.usuarioAgregar.papeleria = event.detail.value;
+  }
+
+  agregarNuevoEmpleado(){
+
   }
 
 }
