@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../interfaces/interfaces';
+import { FireService } from 'src/app/services/fire.service';
+import { AccionesService } from '../../services/acciones.service';
+import { NavController, ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-agregar-empleado',
@@ -8,7 +11,9 @@ import { Usuario } from '../../interfaces/interfaces';
 })
 export class AgregarEmpleadoPage implements OnInit {
 
-  constructor() { }
+  constructor( private fireService: FireService,
+               private accionesService: AccionesService,
+               private modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
@@ -28,6 +33,8 @@ export class AgregarEmpleadoPage implements OnInit {
     papeleria: null
   }
 
+  contrasena: string;
+
   tipoDeEmpleado(event){
     this.usuarioAgregar.tipo = event.detail.value;
   }
@@ -36,8 +43,12 @@ export class AgregarEmpleadoPage implements OnInit {
     this.usuarioAgregar.papeleria = event.detail.value;
   }
 
-  agregarNuevoEmpleado(){
-
+  async agregarNuevoEmpleado(){
+    this.usuarioAgregar.contraseña = this.contrasena; //Igualamos contraseña
+    //this.usuarioAgregar.fechaDeIngreso = 
+    this.fireService.addUsuario(this.usuarioAgregar);
+    this.modalCtrl.dismiss();
+    this.accionesService.presentToast("Empleado agregado");
   }
 
 }

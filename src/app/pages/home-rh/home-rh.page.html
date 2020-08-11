@@ -9,7 +9,7 @@
 
     <ion-item *ngFor="let e of empleados | filtro: textoBuscar: 'nombre'">
       <ion-label>{{e.nombre}}</ion-label>
-      <ion-button color="secondary"><ion-icon name="settings"></ion-icon></ion-button>
+      <ion-button color="secondary" (click)="modificarEmpleado(e.id, e.nombre)"><ion-icon name="settings"></ion-icon></ion-button>
       <ion-button color="danger" (click)="eliminarEmpleado(e.id, e.nombre)"><ion-icon name="trash"></ion-icon></ion-button>
     </ion-item>
 

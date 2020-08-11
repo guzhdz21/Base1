@@ -149,6 +149,28 @@ export class HomeRHPage implements OnInit {
       }}]);
     }
 
+    async modificarEmpleado(idEmpleado: number, nombreEmpleado: number){
+
+      /* const modal = await this.modalCtrl.create({
+        component: ModificarEmpleadoPage,
+      });
+      await modal.present();
+      */
+
+      await this.accionesService.presentAlertConfirmacionContraseña("¿Estás seguro de eliminar a " + nombreEmpleado + "?", "Ingresa tu contraseña" ,
+      [{text: 'Cancelar',handler: (bla) => { 
+        this.eliminacionConfirmada = false;
+        this.accionesService.presentToast("Eliminación cancelada");}
+      }, {text: 'Eliminar',handler: (bla) => {
+        if(bla.contraseñaConfirmacion == this.usuario.contraseña){
+          this.fireService.removeUsuario(idEmpleado.toString());
+          this.accionesService.presentToast("Empleado Eliminado");
+        } else{
+          this.accionesService.presentToast("Contraseña incorrecta");
+        } 
+      }}]);
+    }
+
     async obtenerNacimiento() {
       this.nacimiento = await this.storageService.cargarNacimiento();
     }

@@ -13,7 +13,6 @@
             </ion-select>
         </ion-item>
 
-
         <ion-item>
     
             <ion-label>Numero de empleado</ion-label>
@@ -105,6 +104,18 @@
             <ion-input type="text"
                 [(ngModel)]="this.usuarioAgregar.NSS"
                 name="NSS"
+                required>
+            </ion-input>
+
+        </ion-item>
+
+        <ion-item>
+    
+            <ion-label>Contraseña</ion-label>
+    
+            <ion-input type="text"
+                [(ngModel)]="this.contrasena"
+                name="contrasena"
                 required>
             </ion-input>
 

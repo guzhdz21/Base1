@@ -38,7 +38,8 @@ const routes: Routes = [
   {
     path: 'agregar-empleado',
     loadChildren: () => import('./pages/agregar-empleado/agregar-empleado.module').then( m => m.AgregarEmpleadoPageModule)
-  },  {
+  },
+  {
     path: 'home-supervisor',
     loadChildren: () => import('./pages/home-supervisor/home-supervisor.module').then( m => m.HomeSupervisorPageModule)
   },
