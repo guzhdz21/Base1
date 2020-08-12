@@ -37,15 +37,54 @@
   margin-right: auto;
 }
 
-.alert-head.sc-ion-alert-md {
-  background-color: var(--ion-color-primary) !important;
-  margin-bottom: 5%;
-}
-
-.alert-title.sc-ion-alert-md {
-  color: white !important;
-}
 .explicacion {
   color: var(--ion-color-medium) !important;
   text-align: center;
 }
+
+//header
+.alert-head.sc-ion-alert-ios {
+  background-color: var(--ion-color-primary) !important;
+}
+
+.alert-title.sc-ion-alert-ios {
+  color: white !important;
+  margin-bottom: 3%;
+}
+  
+  //dimensiones del message y el texto
+  .alert-message.sc-ion-alert-ios{
+    //margin-top: 35px;
+    height: 100%;
+    font-size: 100%;
+    background-color: white;
+    text-align: start;
+  }
+  
+  //la alerta en general
+  .alert-wrapper.sc-ion-alert-ios{
+    height: 60%;
+    width: 80%;
+    min-width: 0%;
+    max-width: 80%;
+  }
+  
+  //seccion de botones
+  .alert-button-group.sc-ion-alert-ios{
+    //font-size: 75%;
+    height: 20%;
+    //width: 100%;
+    //display: block;
+    background-color: #3880ff;
+  }
+  
+  //botones en si
+  .alert-button.sc-ion-alert-ios{
+    height: 100%;
+  }
+
+  //texto dentro de los botones
+  .alert-button-inner.sc-ion-alert-ios{
+    font-size: 120%;
+    color: white;
+  }

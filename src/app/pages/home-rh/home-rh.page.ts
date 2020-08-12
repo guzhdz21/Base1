@@ -179,6 +179,11 @@ export class HomeRHPage implements OnInit {
       this.textoBuscar = event.detail.value;
     }
 
+    async abrirInformacion( empleadoInfo: Usuario ){
+      await this.accionesService.presentAlertGenericaInfoEmpleado(empleadoInfo.nombre, "<br>Número: " + empleadoInfo.numero + "<br><br>Puesto: " + empleadoInfo.tipo + "<br><br>Celular: " + empleadoInfo.celular +
+      "<br><br>CURP: " + empleadoInfo.CURP + "<br><br>RFC: " + empleadoInfo.RFC + "<br><br>NSS: " + empleadoInfo.NSS +"<br><br>Domicilio: " + empleadoInfo.domicilio + "<br><br>Papelería: " + empleadoInfo.papeleria);
+    }
+
     async agregarNuevoEmpleado() {
       const modal = await this.modalCtrl.create({
         component: AgregarEmpleadoPage,
