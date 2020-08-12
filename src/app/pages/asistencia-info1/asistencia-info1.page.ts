@@ -12,7 +12,7 @@ import { ModalController } from '@ionic/angular';
 export class AsistenciaInfo1Page implements OnInit {
 
   @Input() asistencia : Asistencia;
-  @Input() usuario: Usuario;
+  @Input() nombre: string;
   @Input() seguridad: Seguridad;
   @Input() id: string;
 

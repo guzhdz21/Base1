@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario, Seguridad, Cliente, Servicio, Incidente, Hora } from '../../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Servicio, Incidente, Hora, Supervisor } from '../../interfaces/interfaces';
 import { StorageService } from '../../services/storage.service';
 import { FireService } from '../../services/fire.service';
 import { ModalController, Platform, NavController } from '@ionic/angular';
@@ -573,9 +573,14 @@ export class HomeGuardiaPage implements OnInit {
       hora: horario
     }
 
-    await this.supervisorData.alertas.push(incidente);
+    var supervisor: Supervisor = {
+      numero: this.supervisorData.numero,
+      alertas: this.supervisorData.alertas
+    }
+
+    await supervisor.alertas.push(incidente);
     //@ts-ignore
-    await this.fireService.updateSupervisores(this.supervisorData, this.supervisorData.id);
+    await this.fireService.updateSupervisores(supervisor, this.supervisorData.id);
     return;
   }
 

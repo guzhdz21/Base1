@@ -6,6 +6,7 @@ import { FireService } from '../../services/fire.service';
 import { NavController, Platform, ModalController } from '@ionic/angular';
 import { AccionesService } from '../../services/acciones.service';
 import { AsistenciaInfo1Page } from '../asistencia-info1/asistencia-info1.page';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 
 @Component({
   selector: 'app-home-cabina',
@@ -16,9 +17,9 @@ export class HomeCabinaPage implements OnInit {
 
   //Variables visuales generales
   titulo: string = "Turno Matutino";
-  icono = "sunny";
+  icono: string = "sunny";
   fecha: number = 1;
-  carga = false;
+  carga: boolean = false;
 
   //Variables de funcionalidad
   backButtonSub: Subscription;
@@ -40,6 +41,7 @@ export class HomeCabinaPage implements OnInit {
     NSS: null,
     papeleria: null
   }
+  textoBuscar: string = "";
 
   //Variables de los datos del usuario
   usuarioLocal: Usuario = null;
@@ -65,7 +67,8 @@ export class HomeCabinaPage implements OnInit {
               private navCtrl: NavController,
               private accionesService: AccionesService,
               private plt: Platform,
-              private modalCtrl: ModalController) { }
+              private modalCtrl: ModalController,
+              private callNumber: CallNumber) { }
 
   ngOnInit() {
   }
@@ -120,7 +123,7 @@ export class HomeCabinaPage implements OnInit {
     var fecha = new Date();
     await this.fireService.getAllAsistencias().then(res => {
       res.subscribe(val => {
-        if(this.guardias.length != 0 && this.guardias[0].usuario.numero == seguridad.numero) {
+        if(this.guardias.length != 0 && this.guardias[0].seguridad.numero == seguridad.numero) {
           this.guardias = [];
         }
         for (var asis of val) {
@@ -130,8 +133,9 @@ export class HomeCabinaPage implements OnInit {
           && asis.numero == seguridad.numero) {
             var guardia = {
               seguridad: seguridad,
-              usuario: usuario,
               asistencia: asis,
+              nombre: usuario.nombre,
+              celular: usuario.celular
             };
             this.guardias.push(guardia);
             return;
@@ -139,8 +143,9 @@ export class HomeCabinaPage implements OnInit {
         }
         var guardia2 = {
           seguridad: seguridad,
-          usuario: usuario,
           asistencia: null,
+          nombre: usuario.nombre,
+          celular: usuario.celular
         };
         this.guardias.push(guardia2);
       });
@@ -232,7 +237,7 @@ export class HomeCabinaPage implements OnInit {
         component: AsistenciaInfo1Page,
         componentProps: {
           asistencia: this.guardias[i].asistencia,
-          usuario: this.guardias[i].usuario,
+          nombre: this.guardias[i].nombre,
           seguridad: this.guardias[i].seguridad,
           id: this.guardias[i].asistencia.id
         }
@@ -242,6 +247,14 @@ export class HomeCabinaPage implements OnInit {
     } else {
       this.accionesService.presentToast("El elemento no tiene registro de asistencia");
     }
+  }
+
+  async buscar(event) {
+    this.textoBuscar = event.detail.value;
+  }
+
+  async llamar(i) {
+    this.callNumber.callNumber(this.guardias[i].celular.toString(), true)
   }
 
   //Metodos de entrada y salida
@@ -273,6 +286,11 @@ export class HomeCabinaPage implements OnInit {
   }
 
   reinicioVariables() {
+    this.titulo = "Turno Matutino";
+    this.icono = "sunny";
+    this.fecha = 1;
+    this.carga = false;
+
     //Variables de los datos del usuario
     this.usuarioLocal = null;
     this.usuario = {
@@ -290,6 +308,7 @@ export class HomeCabinaPage implements OnInit {
       papeleria: null
     }
     this.id = null;
+    this.guardias = [];
 
     //Variables de funcionalidad
     this.autentificacion = null;
@@ -310,6 +329,7 @@ export class HomeCabinaPage implements OnInit {
       papeleria: null
     }
     this.user = null;
+    this.textoBuscar = "";
     return;
   }
 

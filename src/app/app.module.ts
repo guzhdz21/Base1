@@ -17,6 +17,7 @@ import {Camera} from '@ionic-native/camera/ngx';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { PipesModule } from './pipes/pipes.module';
 import { ComponentsModule } from './components/components.module';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +37,7 @@ import { ComponentsModule } from './components/components.module';
     HttpClientModule,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Camera,
+    CallNumber,
     FirebaseX
   ],
   bootstrap: [AppComponent]

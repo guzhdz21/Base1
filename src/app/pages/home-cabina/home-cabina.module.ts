@@ -10,6 +10,7 @@ import { HomeCabinaPage } from './home-cabina.page';
 import { ComponentsModule } from '../../components/components.module';
 import { AsistenciaInfo1Page } from '../asistencia-info1/asistencia-info1.page';
 import { AsistenciaInfo1PageModule } from '../asistencia-info1/asistencia-info1.module';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   entryComponents: [
@@ -21,7 +22,8 @@ import { AsistenciaInfo1PageModule } from '../asistencia-info1/asistencia-info1.
     IonicModule,
     HomeCabinaPageRoutingModule,
     ComponentsModule,
-    AsistenciaInfo1PageModule
+    AsistenciaInfo1PageModule,
+    PipesModule
   ],
   declarations: [HomeCabinaPage]
 })
