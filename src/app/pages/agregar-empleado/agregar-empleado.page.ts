@@ -45,7 +45,7 @@ export class AgregarEmpleadoPage implements OnInit {
 
   async agregarNuevoEmpleado(){
     this.usuarioAgregar.contraseña = this.contrasena; //Igualamos contraseña
-    //this.usuarioAgregar.fechaDeIngreso = 
+    this.usuarioAgregar.fechaDeIngreso = new Date();
     this.fireService.addUsuario(this.usuarioAgregar);
     this.modalCtrl.dismiss();
     this.accionesService.presentToast("Empleado agregado");

@@ -181,7 +181,7 @@ export class HomeRHPage implements OnInit {
 
     async abrirInformacion( empleadoInfo: Usuario ){
       await this.accionesService.presentAlertGenericaInfoEmpleado(empleadoInfo.nombre, "<br>Número: " + empleadoInfo.numero + "<br><br>Puesto: " + empleadoInfo.tipo + "<br><br>Celular: " + empleadoInfo.celular +
-      "<br><br>CURP: " + empleadoInfo.CURP + "<br><br>RFC: " + empleadoInfo.RFC + "<br><br>NSS: " + empleadoInfo.NSS +"<br><br>Domicilio: " + empleadoInfo.domicilio + "<br><br>Papelería: " + empleadoInfo.papeleria);
+      "<br><br>CURP: " + empleadoInfo.CURP + "<br><br>RFC: " + empleadoInfo.RFC + "<br><br>NSS: " + empleadoInfo.NSS +"<br><br>Domicilio: " + empleadoInfo.domicilio + "<br><br>Papelería: " + empleadoInfo.papeleria + "<br><br>Fecha de alta: " + empleadoInfo.fechaDeIngreso);
     }
 
     async agregarNuevoEmpleado() {
