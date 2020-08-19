@@ -79,4 +79,23 @@ export class AccionesService {
     await alert.onDidDismiss();
     return;
   }
+
+  async presentAlertGenericaInfoEmpleado(header: string, message: string) {
+      
+    const alert = await this.alertCtrl.create({
+      header: header,
+      message: message,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: (bla) => {}
+        }
+      ],
+      mode: "ios",
+      backdropDismiss: false
+    });
+    alert.present();
+    await alert.onDidDismiss();
+    return;
+  }
 }
