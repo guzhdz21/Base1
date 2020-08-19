@@ -1,94 +1,103 @@
 <app-header-menu titulo="Global Fhas" tipo="cabina" [nombre]="usuario.nombre"></app-header-menu>
 
 <ion-content>
-  <ion-toolbar>
-    <ion-segment (ionChange)="segment($event)" value="Matutino">
-        <ion-segment-button value="Matutino">
-          <ion-label>Matutino</ion-label>
-        </ion-segment-button>
 
-        <ion-segment-button value="Nocturno">
-          <ion-label>Nocturno</ion-label>
-        </ion-segment-button>
+  <app-skeleton-cabina *ngIf="skeleton"></app-skeleton-cabina>
 
-      </ion-segment>
-  </ion-toolbar>
-
-  <ion-item lines="none"> 
-    <ion-badge color="primary" class="centrari">{{titulo}}</ion-badge>
-  </ion-item>
-
-  <ion-item lines="none">
-    <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
-  </ion-item>
-
-  <ion-searchbar (ionChange)="buscar($event)" debounce="200"></ion-searchbar>
-
-  <ion-list>
-    <div *ngFor="let guardia of guardias | filtro: textoBuscar: 'nombre'; let i = index">
-      <div *ngIf="guardia.seguridad.servicios[fecha].servicio.cliente != null && 
-      guardia.seguridad.servicios[fecha].servicio.horario.hora < 19 
-      && guardia.seguridad.servicios[fecha].servicio.horario.hora >= 7 
-      && titulo == 'Turno Matutino'">
-        <ion-item lines="none">
-          <ion-label>{{guardia.nombre}}</ion-label>
-          <ion-icon name="flag" color="danger" *ngIf="guardia.asistencia == null" slot="end"></ion-icon>
-          <ion-icon name="flag" color="warning" *ngIf="guardia.asistencia != null && guardia.asistencia.valido == false" slot="end"></ion-icon>
-          <ion-icon name="flag" color="success" *ngIf="guardia.asistencia != null && guardia.asistencia.valido" slot="end"></ion-icon>
-          <ion-buttons>
-            <ion-button slot="end" (click)="llamar(i)">
-              <ion-icon name="call" color="primary"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
-
-        <ion-item class="ion-item">
-          <ion-label color="primary">Asistencia:</ion-label>
-          <ion-label *ngIf="guardia.asistencia == null">No registrada</ion-label>
-          <ion-label *ngIf="guardia.asistencia != null && !guardia.asistencia.valido">No validada</ion-label>
-          <ion-label *ngIf="guardia.asistencia != null && guardia.asistencia.valido">Registrada y validada</ion-label>
-          <ion-buttons>
-            <ion-button slot="end" (click)="abrirAsistencia(i)">
-              <ion-icon name="information-circle" color="primary"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
+  <div *ngIf="!skeleton">
+    <ion-toolbar>
+      <ion-segment (ionChange)="segment($event)" value="Matutino">
+          <ion-segment-button value="Matutino">
+            <ion-label>Matutino</ion-label>
+          </ion-segment-button>
+  
+          <ion-segment-button value="Nocturno">
+            <ion-label>Nocturno</ion-label>
+          </ion-segment-button>
+  
+        </ion-segment>
+    </ion-toolbar>
+  
+    <ion-item lines="none"> 
+      <ion-badge color="primary" class="centrari">{{titulo}}</ion-badge>
+    </ion-item>
+  
+    <ion-item lines="none">
+      <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
+    </ion-item>
+  
+    <ion-searchbar (ionChange)="buscar($event)" debounce="200"></ion-searchbar>
+  
+    <ion-list>
+      <div *ngFor="let guardia of guardias | filtro: textoBuscar: 'nombre'; let i = index">
+        <div *ngIf="guardia.seguridad.servicios[fecha].servicio.cliente != null && 
+        guardia.seguridad.servicios[fecha].servicio.horario.hora < 19 
+        && guardia.seguridad.servicios[fecha].servicio.horario.hora >= 7 
+        && titulo == 'Turno Matutino'">
+          <ion-item lines="none">
+            <ion-label>{{guardia.nombre}}</ion-label>
+            <ion-icon name="flag" color="danger" *ngIf="guardia.asistencia == null" slot="end"></ion-icon>
+            <ion-icon name="flag" color="warning" *ngIf="guardia.asistencia != null && guardia.asistencia.valido == false" slot="end"></ion-icon>
+            <ion-icon name="flag" color="success" *ngIf="guardia.asistencia != null && guardia.asistencia.valido" slot="end"></ion-icon>
+            <ion-buttons>
+              <ion-button slot="end" (click)="llamar(i)">
+                <ion-icon name="call" color="primary"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+  
+          <ion-item class="ion-item">
+            <ion-label color="primary">Asistencia:</ion-label>
+            <ion-label *ngIf="guardia.asistencia == null">No registrada</ion-label>
+            <ion-label *ngIf="guardia.asistencia != null && !guardia.asistencia.valido">No validada</ion-label>
+            <ion-label *ngIf="guardia.asistencia != null && guardia.asistencia.valido">Registrada y validada</ion-label>
+            <ion-buttons>
+              <ion-button slot="end" (click)="abrirAsistencia(i)">
+                <ion-icon name="information-circle" color="primary"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+        </div>
+  
+        <div *ngIf="guardia.seguridad.servicios[fecha].servicio.cliente != null && 
+        (guardia.seguridad.servicios[fecha].servicio.horario.hora >= 19 
+        || guardia.seguridad.servicios[fecha].servicio.horario.hora < 7)
+        && titulo == 'Turno Nocturno'">
+          <ion-item lines="none">
+            <ion-label>{{guardia.nombre}}</ion-label>
+            <ion-icon name="flag" color="danger" *ngIf="guardia.asistencia == null" slot="end"></ion-icon>
+            <ion-icon name="flag" color="warning" *ngIf="guardia.asistencia != null && guardia.asistencia.valido == false" slot="end"></ion-icon>
+            <ion-icon name="flag" color="success" *ngIf="guardia.asistencia != null && guardia.asistencia.valido" slot="end"></ion-icon>
+            <ion-buttons>
+              <ion-button slot="end" (click)="llamar(i)">
+                <ion-icon name="call" color="primary"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+  
+          <ion-item class="ion-item">
+            <ion-label color="primary">Asistencia:</ion-label>
+            <ion-label *ngIf="guardia.asistencia == null">No registrada</ion-label>
+            <ion-label *ngIf="guardia.asistencia != null && !guardia.asistencia.valido">No validada</ion-label>
+            <ion-label *ngIf="guardia.asistencia != null && guardia.asistencia.valido">Registrada y validada</ion-label>
+            <ion-buttons>
+              <ion-button slot="end" (click)="abrirAsistencia(i)">
+                <ion-icon name="information-circle" color="primary"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+        </div>
       </div>
+    </ion-list>
+  
+    <ion-item lines="none">
+      <ion-label class="centrar ion-text-wrap" color="medium">
+        Fin de la lista
+      </ion-label>
+    </ion-item>
+  </div>
 
-      <div *ngIf="guardia.seguridad.servicios[fecha].servicio.cliente != null && 
-      (guardia.seguridad.servicios[fecha].servicio.horario.hora >= 19 
-      || guardia.seguridad.servicios[fecha].servicio.horario.hora < 7)
-      && titulo == 'Turno Nocturno'">
-        <ion-item lines="none">
-          <ion-label>{{guardia.nombre}}</ion-label>
-          <ion-icon name="flag" color="danger" *ngIf="guardia.asistencia == null" slot="end"></ion-icon>
-          <ion-icon name="flag" color="warning" *ngIf="guardia.asistencia != null && guardia.asistencia.valido == false" slot="end"></ion-icon>
-          <ion-icon name="flag" color="success" *ngIf="guardia.asistencia != null && guardia.asistencia.valido" slot="end"></ion-icon>
-          <ion-buttons>
-            <ion-button slot="end" (click)="llamar(i)">
-              <ion-icon name="call" color="primary"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
-
-        <ion-item class="ion-item">
-          <ion-label color="primary">Asistencia:</ion-label>
-          <ion-label *ngIf="guardia.asistencia == null">No registrada</ion-label>
-          <ion-label *ngIf="guardia.asistencia != null && !guardia.asistencia.valido">No validada</ion-label>
-          <ion-label *ngIf="guardia.asistencia != null && guardia.asistencia.valido">Registrada y validada</ion-label>
-          <ion-buttons>
-            <ion-button slot="end" (click)="abrirAsistencia(i)">
-              <ion-icon name="information-circle" color="primary"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
-      </div>
-    </div>
-  </ion-list>
-
-  <ion-item lines="none">
-    <ion-label class="centrar ion-text-wrap" color="medium">
-      Fin de la lista
-    </ion-label>
-  </ion-item>
+  <ion-button class="centrari boton1"
+                  (click)="excel()">Excel</ion-button>
+  
 </ion-content>

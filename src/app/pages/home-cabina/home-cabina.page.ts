@@ -7,6 +7,7 @@ import { NavController, Platform, ModalController } from '@ionic/angular';
 import { AccionesService } from '../../services/acciones.service';
 import { AsistenciaInfo1Page } from '../asistencia-info1/asistencia-info1.page';
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-home-cabina',
@@ -20,6 +21,7 @@ export class HomeCabinaPage implements OnInit {
   icono: string = "sunny";
   fecha: number = 1;
   carga: boolean = false;
+  skeleton = true;
 
   //Variables de funcionalidad
   backButtonSub: Subscription;
@@ -61,6 +63,8 @@ export class HomeCabinaPage implements OnInit {
   }
   id: string = null;
   guardias: any[] = [];
+  arreglo: any [] = [];
+  arreglo2: any [] = [];
 
   constructor(private storageService: StorageService,
               private fireService: FireService,
@@ -279,6 +283,8 @@ export class HomeCabinaPage implements OnInit {
       console.log("verificar");
       this.cargarUsuarioComparar();
     });
+    await this.delay(2000);
+    this.skeleton = false;
   }
 
   async ionViewWillLeave() {
@@ -290,6 +296,7 @@ export class HomeCabinaPage implements OnInit {
     this.icono = "sunny";
     this.fecha = 1;
     this.carga = false;
+    this.skeleton = true;
 
     //Variables de los datos del usuario
     this.usuarioLocal = null;
@@ -331,6 +338,43 @@ export class HomeCabinaPage implements OnInit {
     this.user = null;
     this.textoBuscar = "";
     return;
+  }
+
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  excel() {
+    this.arreglo2 = [
+      {
+        Numero: "4321",
+        Nombre: "Luis Arlex Buenrostro Adame",
+        Servicio: "Cruz Verde - Norte"
+      },
+      {
+        Numero: "1234",
+        Nombre: "Paul Aceves Escarcega",
+        Servicio: "Cruz Verde - Sur"
+      }
+    ];
+
+    var data = [
+      {
+        Servicio: "Cruz Verde",
+        Supervisor: "Gustavo Hernández Cano"
+      }
+    ];
+
+    {
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.arreglo2);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "CruzVerde");
+      XLSX.writeFile(wb, "usuarios" +'.xlsx');
+    }
+  }
+
+  async exportToExcel(){
+
   }
 
 }
