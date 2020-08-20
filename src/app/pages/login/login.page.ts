@@ -78,7 +78,7 @@ export class LoginPage implements OnInit {
           await this.seleccionarHome(this.usuario.tipo);
           return;
         }
-        this.textoError = "El numero de empleado y la fecha de nacimiento no concuerdan, revisalos bien e intenta de nuevo";
+        this.textoError = "El numero de empleado y contraseña no concuerdan, revisalos bien e intenta de nuevo";
         this.logInvalido = true;
         this.password = null;
         return;

@@ -31,8 +31,8 @@
     <ion-list>
       <div *ngFor="let guardia of guardias | filtro: textoBuscar: 'nombre'; let i = index">
         <div *ngIf="guardia.seguridad.servicios[fecha].servicio.cliente != null && 
-        guardia.seguridad.servicios[fecha].servicio.horario.hora < 19 
-        && guardia.seguridad.servicios[fecha].servicio.horario.hora >= 7 
+        (guardia.seguridad.servicios[fecha].servicio.horario.hora < 19 
+        && guardia.seguridad.servicios[fecha].servicio.horario.hora >= 7) 
         && titulo == 'Turno Matutino'">
           <ion-item lines="none">
             <ion-label>{{guardia.nombre}}</ion-label>
@@ -95,9 +95,8 @@
         Fin de la lista
       </ion-label>
     </ion-item>
-  </div>
-
-  <ion-button class="centrari boton1"
+    <ion-button class="centrari boton1"
                   (click)="excel()">Excel</ion-button>
+  </div>
   
 </ion-content>

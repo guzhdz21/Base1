@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
-import { Usuario, Seguridad } from '../../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente } from '../../interfaces/interfaces';
 import { StorageService } from '../../services/storage.service';
 import { FireService } from '../../services/fire.service';
 import { NavController, Platform, ModalController } from '@ionic/angular';
@@ -62,9 +62,9 @@ export class HomeCabinaPage implements OnInit {
     papeleria: null
   }
   id: string = null;
+  clientes: Cliente[];
   guardias: any[] = [];
-  arreglo: any [] = [];
-  arreglo2: any [] = [];
+  excelArray: any [] = [];
 
   constructor(private storageService: StorageService,
               private fireService: FireService,
@@ -123,7 +123,7 @@ export class HomeCabinaPage implements OnInit {
     return;
   }
 
-  async obtenerAsistencias (seguridad: Seguridad, usuario: Usuario) {
+  async obtenerAsistencias(seguridad: Seguridad, usuario: Usuario) {
     var fecha = new Date();
     await this.fireService.getAllAsistencias().then(res => {
       res.subscribe(val => {
@@ -155,6 +155,14 @@ export class HomeCabinaPage implements OnInit {
       });
     });
     return;
+  }
+
+  async obtenerClientes() {
+    await this.fireService.getAllClientes().then(res => {
+      res.subscribe(val => {
+        this.clientes = val;
+      });
+    });
   }
 
   //Metodos de verificacion
@@ -269,14 +277,15 @@ export class HomeCabinaPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+
+    await this.reinicioVariables();
     this.fecha = new Date().getDay() - 1 ;
     if(this.fecha == -1) {
       this.fecha = 6;
     }
-
-    await this.reinicioVariables();
     await this.obtenerUsuarioLocal();
     await this.obtenerSeguridad();
+    await this.obtenerClientes();
 
     this.autentificacion = interval(3500);
     this.autenSub = await this.autentificacion.subscribe(x => {
@@ -345,32 +354,31 @@ export class HomeCabinaPage implements OnInit {
   }
 
   excel() {
-    this.arreglo2 = [
-      {
-        Numero: "4321",
-        Nombre: "Luis Arlex Buenrostro Adame",
-        Servicio: "Cruz Verde - Norte"
-      },
-      {
-        Numero: "1234",
-        Nombre: "Paul Aceves Escarcega",
-        Servicio: "Cruz Verde - Sur"
-      }
-    ];
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
 
-    var data = [
-      {
-        Servicio: "Cruz Verde",
-        Supervisor: "Gustavo Hernández Cano"
-      }
-    ];
+    for(var cliente of this.clientes) {
 
-    {
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.arreglo2);
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "CruzVerde");
-      XLSX.writeFile(wb, "usuarios" +'.xlsx');
+      this.excelArray = [];
+      for(var guardia of this.guardias) {
+        if(guardia.seguridad.servicios[this.fecha].servicio.cliente == cliente.nombre) {
+          var aux = "";
+          for (var servicio of cliente.servicios) {
+            if(servicio.numero == guardia.seguridad.servicios[this.fecha].servicio.servicio) {
+              aux = servicio.nombre;
+            }
+          }
+          var dato = {
+            Numero_Elemento: guardia.seguridad.numero,
+            Nombre: guardia.nombre,
+            Servicio: cliente.nombre + " - " + aux
+          }
+          this.excelArray.push(dato);
+        }
+      }
+      var ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.excelArray);
+      XLSX.utils.book_append_sheet(wb, ws, cliente.nombre);
     }
+    XLSX.writeFile(wb, "Guardias" +'.xlsx');
   }
 
   async exportToExcel(){

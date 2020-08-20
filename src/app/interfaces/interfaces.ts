@@ -88,4 +88,5 @@ export interface Incidente {
 export interface Supervisor {
     numero: number;
     alertas: Incidente[];
+    clientes: string[];
 }
