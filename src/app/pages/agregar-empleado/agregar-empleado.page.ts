@@ -11,6 +11,9 @@ import { NavController, ModalController } from '@ionic/angular';
 })
 export class AgregarEmpleadoPage implements OnInit {
 
+  fechaDeNacimiento: string = new Date().toISOString();
+  fechaDeIngreso: string = new Date().toISOString();
+
   constructor( private fireService: FireService,
                private accionesService: AccionesService,
                private modalCtrl: ModalController) { }
@@ -34,7 +37,6 @@ export class AgregarEmpleadoPage implements OnInit {
   }
 
   contrasena: string;
-  fechaDeHoy: Date = new Date();
 
   tipoDeEmpleado(event){
     this.usuarioAgregar.tipo = event.detail.value;
@@ -45,8 +47,16 @@ export class AgregarEmpleadoPage implements OnInit {
   }
 
   async agregarNuevoEmpleado(){
+    //FECHA DE NACIMIENTO
+    var diaN = new Date(this.fechaDeNacimiento);
+    //@ts-ignore
+    this.usuarioAgregar.nacimiento = diaN;
+    //FECHA DE INGRESO
+    var diaI = new Date(this.fechaDeIngreso);
+    //@ts-ignore
+    this.usuarioAgregar.fechaDeIngreso = diaI;
+
     this.usuarioAgregar.contraseña = this.contrasena; //Igualamos contraseña
-    this.usuarioAgregar.fechaDeIngreso = this.fechaDeHoy.toDateString();
     this.fireService.addUsuario(this.usuarioAgregar);
     this.modalCtrl.dismiss();
     this.accionesService.presentToast("Empleado agregado");

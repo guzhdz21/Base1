@@ -12,7 +12,7 @@ export interface Usuario {
     nombre: string;
     numero: number;
     tipo: string;
-    fechaDeIngreso: string;
+    fechaDeIngreso: Timestamp;
     domicilio: string;
     celular: number;
     CURP: string;

@@ -179,9 +179,21 @@ export class HomeRHPage implements OnInit {
       this.textoBuscar = event.detail.value;
     }
 
-    async abrirInformacion( empleadoInfo: Usuario ){
-      await this.accionesService.presentAlertGenericaInfoEmpleado(empleadoInfo.nombre, "<br>Número: " + empleadoInfo.numero + "<br><br>Puesto: " + empleadoInfo.tipo + "<br><br>Celular: " + empleadoInfo.celular +
-      "<br><br>CURP: " + empleadoInfo.CURP + "<br><br>RFC: " + empleadoInfo.RFC + "<br><br>NSS: " + empleadoInfo.NSS +"<br><br>Domicilio: " + empleadoInfo.domicilio + "<br><br>Papelería: " + empleadoInfo.papeleria + "<br><br>Fecha de alta: " + empleadoInfo.fechaDeIngreso);
+    async abrirInformacion( empleadoInfo: Usuario){
+      var diaN = empleadoInfo.nacimiento.toDate().getDate();
+      var mesN = empleadoInfo.nacimiento.toDate().getMonth() + 1;
+      console.log(" la var: " + mesN)
+      console.log(" la completa: " + empleadoInfo.nacimiento.toDate())
+      var anoN = empleadoInfo.nacimiento.toDate().getFullYear();
+      var fechaN = diaN + "/" + mesN + "/" + anoN; 
+
+      var diaI = empleadoInfo.fechaDeIngreso.toDate().getDate();
+      var mesI = empleadoInfo.fechaDeIngreso.toDate().getMonth() + 1;
+      var anoI = empleadoInfo.fechaDeIngreso.toDate().getFullYear();
+      var fechaI = diaI + "/" + mesI + "/" + anoI; 
+
+      await this.accionesService.presentAlertGenericaInfoEmpleado(empleadoInfo.nombre, "<br>Número: " + empleadoInfo.numero + "<br><br>Puesto: " + empleadoInfo.tipo + "<br><br>Celular: " + empleadoInfo.celular + "<br><br>Fecha de nacimiento: " + fechaN +
+      "<br><br>CURP: " + empleadoInfo.CURP + "<br><br>RFC: " + empleadoInfo.RFC + "<br><br>NSS: " + empleadoInfo.NSS +"<br><br>Domicilio: " + empleadoInfo.domicilio + "<br><br>Papelería: " + empleadoInfo.papeleria + "<br><br>Fecha de alta: " + fechaI);
     }
 
     async agregarNuevoEmpleado() {
