@@ -90,16 +90,37 @@ export class AsistenciaInfo1Page implements OnInit {
   }
 
   async obtenerSupervisor() {
+    var fecha = (new Date().getDay()) - 1;
+    if(fecha == -1) {
+      fecha = 6;
+    }
+    
+    await this.fireService.getAllSupervisores().then(res => {
+      res.subscribe(val => {
+        for(var supervisor of val) {
+          for(var servicio of supervisor.clientes) {
+            if(this.seguridad.servicios[fecha].servicio.cliente == servicio) {
+              this.obtenerNameSupervisor(supervisor.numero);
+              return;
+            }
+          }
+        }
+      })
+    });
+  }
+
+  async obtenerNameSupervisor(numero: number) {
     await this.fireService.getAllUsuarios().then(res => {
       res.subscribe(val => {
-        for (var supervisor of val) {
-          if(supervisor.numero == this.seguridad.supervisor) {
-            this.supervisor = supervisor.nombre;
-            return;
+        for(var usuario of val) {
+          if(usuario.numero == numero) {
+            this.supervisor = usuario.nombre;
+            break;
           }
         }
       });
     });
+    return;
   }
 
   async validarAsistencia () {

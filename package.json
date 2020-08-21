@@ -38,6 +38,7 @@
     "firebase": "^7.15.5",
     "rxjs": "~6.5.1",
     "tslib": "^1.10.0",
+    "xlsx": "^0.16.6",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

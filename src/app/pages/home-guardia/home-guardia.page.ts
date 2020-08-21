@@ -130,7 +130,7 @@ export class HomeGuardiaPage implements OnInit {
   seguridad: Seguridad;
   cliente: Cliente;
   servicio: Servicio;
-  supervisorData: any;
+  supervisorData: Supervisor;
   id: string = null;
 
   //Variables de funcionalidad
@@ -212,27 +212,43 @@ export class HomeGuardiaPage implements OnInit {
   }
 
   async obtenerSupervisor(seguridad: Seguridad) {
+    var fecha = (new Date().getDay()) - 1;
+    if(fecha == -1) {
+      fecha = 6;
+    }
+    
+    await this.fireService.getAllSupervisores().then(res => {
+      res.subscribe(val => {
+        if(seguridad.servicios[fecha].servicio.cliente != null) {
+          for(var supervisor of val) {
+            for(var servicio of supervisor.clientes) {
+              if(seguridad.servicios[fecha].servicio.cliente == servicio) {
+                this.supervisorData = supervisor;
+                this.obtenerNameSupervisor(supervisor.numero);
+                return;
+              }
+            }
+          }
+        } else {
+          this.supervisor = "N/A"
+          return;
+        }
+      })
+    });
+  }
+
+  async obtenerNameSupervisor(numero: number) {
     await this.fireService.getAllUsuarios().then(res => {
       res.subscribe(val => {
         for(var usuario of val) {
-          if(usuario.numero == seguridad.supervisor) {
+          if(usuario.numero == numero) {
             this.supervisor = usuario.nombre;
             break;
           }
         }
       });
     });
-
-    await this.fireService.getAllSupervisores().then(res => {
-      res.subscribe(val => {
-        for(var supervisor of val) {
-          if(seguridad.supervisor == supervisor.numero) {
-            this.supervisorData = supervisor;
-            break;
-          }
-        }
-      })
-    });
+    return;
   }
 
   async obtenerClientes(seguridad: Seguridad, dia: number) {
@@ -514,7 +530,11 @@ export class HomeGuardiaPage implements OnInit {
   }
 
   abrirFormularioReporte() {
-    this.abrirFormulario = true;
+    if(this.seguridad.servicios[this.dia].servicio.cliente == null) {
+      this.accionesService.presentToast("No puedes reportar ya que hoy no cuentas con servicio")
+    } else {
+      this.abrirFormulario = true;
+    }
   }
 
   abrirDia(i: number) {
@@ -537,8 +557,7 @@ export class HomeGuardiaPage implements OnInit {
     await this.fireService.getAllDispositivos().then(res => {
       res.subscribe(val => {
         for (var dis of val) {
-          if(dis.numero == this.seguridad.supervisor) {
-            console.log(dis.token);
+          if(dis.numero == this.supervisorData.numero) {
             this.pushFire.enviarPush(this.tituloAlerta, this.descripcionAlerta, dis.token, this.servicioText).subscribe();
             this.accionesService.presentToast("Alerta enviada");
             this.abrirFormulario = false;
@@ -575,7 +594,8 @@ export class HomeGuardiaPage implements OnInit {
 
     var supervisor: Supervisor = {
       numero: this.supervisorData.numero,
-      alertas: this.supervisorData.alertas
+      alertas: this.supervisorData.alertas,
+      clientes: this.supervisorData.clientes
     }
 
     await supervisor.alertas.push(incidente);

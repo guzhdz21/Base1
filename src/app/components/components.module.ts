@@ -7,6 +7,7 @@ import { HeaderMenuComponent } from './header-menu/header-menu.component';
 import { MenuComponent } from './menu/menu.component';
 import { HeaderModalComponent } from './header-modal/header-modal.component';
 import { SkeletonComponent } from './skeleton/skeleton.component';
+import { SkeletonCabinaComponent } from './skeleton-cabina/skeleton-cabina.component';
 
 
 
@@ -17,7 +18,8 @@ import { SkeletonComponent } from './skeleton/skeleton.component';
     HeaderMenuComponent,
     MenuComponent,
     HeaderModalComponent,
-    SkeletonComponent
+    SkeletonComponent,
+    SkeletonCabinaComponent
   ], 
   exports: [
     BotonInfoComponent,
@@ -25,7 +27,8 @@ import { SkeletonComponent } from './skeleton/skeleton.component';
     HeaderMenuComponent,
     MenuComponent,
     HeaderModalComponent,
-    SkeletonComponent
+    SkeletonComponent,
+    SkeletonCabinaComponent
   ],
   imports: [
     CommonModule,

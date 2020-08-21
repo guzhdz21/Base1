@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
-import { Usuario, Seguridad } from '../../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente } from '../../interfaces/interfaces';
 import { StorageService } from '../../services/storage.service';
 import { FireService } from '../../services/fire.service';
 import { NavController, Platform, ModalController } from '@ionic/angular';
 import { AccionesService } from '../../services/acciones.service';
 import { AsistenciaInfo1Page } from '../asistencia-info1/asistencia-info1.page';
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-home-cabina',
@@ -20,6 +21,7 @@ export class HomeCabinaPage implements OnInit {
   icono: string = "sunny";
   fecha: number = 1;
   carga: boolean = false;
+  skeleton = true;
 
   //Variables de funcionalidad
   backButtonSub: Subscription;
@@ -60,7 +62,9 @@ export class HomeCabinaPage implements OnInit {
     papeleria: null
   }
   id: string = null;
+  clientes: Cliente[];
   guardias: any[] = [];
+  excelArray: any [] = [];
 
   constructor(private storageService: StorageService,
               private fireService: FireService,
@@ -119,7 +123,7 @@ export class HomeCabinaPage implements OnInit {
     return;
   }
 
-  async obtenerAsistencias (seguridad: Seguridad, usuario: Usuario) {
+  async obtenerAsistencias(seguridad: Seguridad, usuario: Usuario) {
     var fecha = new Date();
     await this.fireService.getAllAsistencias().then(res => {
       res.subscribe(val => {
@@ -151,6 +155,14 @@ export class HomeCabinaPage implements OnInit {
       });
     });
     return;
+  }
+
+  async obtenerClientes() {
+    await this.fireService.getAllClientes().then(res => {
+      res.subscribe(val => {
+        this.clientes = val;
+      });
+    });
   }
 
   //Metodos de verificacion
@@ -265,20 +277,23 @@ export class HomeCabinaPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+
+    await this.reinicioVariables();
     this.fecha = new Date().getDay() - 1 ;
     if(this.fecha == -1) {
       this.fecha = 6;
     }
-
-    await this.reinicioVariables();
     await this.obtenerUsuarioLocal();
     await this.obtenerSeguridad();
+    await this.obtenerClientes();
 
     this.autentificacion = interval(3500);
     this.autenSub = await this.autentificacion.subscribe(x => {
       console.log("verificar");
       this.cargarUsuarioComparar();
     });
+    await this.delay(2000);
+    this.skeleton = false;
   }
 
   async ionViewWillLeave() {
@@ -290,6 +305,7 @@ export class HomeCabinaPage implements OnInit {
     this.icono = "sunny";
     this.fecha = 1;
     this.carga = false;
+    this.skeleton = true;
 
     //Variables de los datos del usuario
     this.usuarioLocal = null;
@@ -331,6 +347,42 @@ export class HomeCabinaPage implements OnInit {
     this.user = null;
     this.textoBuscar = "";
     return;
+  }
+
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  excel() {
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+
+    for(var cliente of this.clientes) {
+
+      this.excelArray = [];
+      for(var guardia of this.guardias) {
+        if(guardia.seguridad.servicios[this.fecha].servicio.cliente == cliente.nombre) {
+          var aux = "";
+          for (var servicio of cliente.servicios) {
+            if(servicio.numero == guardia.seguridad.servicios[this.fecha].servicio.servicio) {
+              aux = servicio.nombre;
+            }
+          }
+          var dato = {
+            Numero_Elemento: guardia.seguridad.numero,
+            Nombre: guardia.nombre,
+            Servicio: cliente.nombre + " - " + aux
+          }
+          this.excelArray.push(dato);
+        }
+      }
+      var ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.excelArray);
+      XLSX.utils.book_append_sheet(wb, ws, cliente.nombre);
+    }
+    XLSX.writeFile(wb, "Guardias" +'.xlsx');
+  }
+
+  async exportToExcel(){
+
   }
 
 }
