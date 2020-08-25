@@ -18,7 +18,7 @@ export interface Usuario {
     CURP: string;
     RFC: string;
     NSS: string;
-    papeleria: boolean;
+    papeleria: string;
 }
 
 export interface Seguridad {
