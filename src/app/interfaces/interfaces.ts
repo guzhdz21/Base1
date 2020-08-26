@@ -24,7 +24,6 @@ export interface Usuario {
 export interface Seguridad {
     numero: number;
     servicios: Asignacion[];
-    supervisor: number;
 }
 
 export interface recursosHumanos {

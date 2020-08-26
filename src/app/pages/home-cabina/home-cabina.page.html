@@ -1,4 +1,53 @@
-<app-header-menu titulo="Global Fhas" tipo="cabina" [nombre]="usuario.nombre"></app-header-menu>
+<ion-router-outlet id="cabina"></ion-router-outlet>
+<ion-header no-border>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button menu="cabina"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Global Fhas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-menu side="start"
+          menuId="cabina"
+          contentId="cabina">
+  
+  <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menú</ion-title>
+      </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+
+    <ion-menu-toggle>
+
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img src="/assets/images/Logo.JPG">
+        </ion-avatar>
+        <ion-label>{{usuario.nombre}}</ion-label>
+      </ion-item>
+        
+      </ion-menu-toggle>
+      
+      <ion-list>
+        <ion-menu-toggle *ngFor="let opcion of cabina">
+          <ion-item (click)="redirigir(opcion.nombre, opcion.irA)">
+            <ion-icon color="primary" 
+                      [name]="opcion.icono" 
+                      slot="start"
+                      class="masleft"></ion-icon>
+            <ion-label>{{opcion.nombre}}</ion-label>
+          </ion-item>
+
+        </ion-menu-toggle> 
+      </ion-list>
+
+  </ion-content>
+</ion-menu>
 
 <ion-content>
 

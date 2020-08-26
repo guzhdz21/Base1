@@ -16,6 +16,23 @@ export class HomeSupervisorPage implements OnInit {
   //Variables visuales generales
   titulo: string = "Informacion General";
   icono = "document-text";
+  supervisor = [
+    {
+      icono: 'warning',
+      nombre: 'Alertas Incidentes',
+      irA: '/login'
+    },
+    {
+      icono: 'location',
+      nombre: 'Ubicacion guardias',
+      irA: '/login'
+    },
+    {
+      icono: 'log-out-outline',
+      nombre: 'Cerrar Sesion',
+      irA: '/login'
+    }
+  ];
 
   //Variables de funcionalidad
   backButtonSub: Subscription;
@@ -166,6 +183,13 @@ export class HomeSupervisorPage implements OnInit {
       }
 
     }
+  }
+
+  async redirigir(nombre: string, irA: string) {
+    if(nombre == "Cerrar Sesion") {
+      await this.storageService.eliminarUsuario();
+    }
+    await this.navCtrl.navigateRoot(irA);
   }
 
   //Metodos de entrada y salida
