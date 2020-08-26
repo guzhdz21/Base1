@@ -147,7 +147,6 @@ export class HomeGuardiaPage implements OnInit {
   existe: boolean = true;
   dia: number;
   
-
   usuarioFake: Usuario = {
     contraseña: null,
     nacimiento: null,

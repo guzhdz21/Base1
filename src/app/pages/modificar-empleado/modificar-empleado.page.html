@@ -1,0 +1,171 @@
+<app-header-modal titulo ="Modificar Empleado" ruta ="/home-rh"></app-header-modal>
+
+<ion-content>
+
+  <ion-list>
+    <ion-item>
+        <ion-label class="ion-text-wrap">Tipo de empleado</ion-label>
+        <ion-select interface="popover" [(ngModel)] = "this.empleadoAModificar.tipo" (ionChange)="tipoDeEmpleado($event)" value="this.empleadoAModificar.tipo">
+            <ion-select-option value="Elemento">Elemento de seguridad</ion-select-option>
+            <ion-select-option value="Supervisor">Supervisor</ion-select-option>
+            <ion-select-option value="RH">Recursos humanos</ion-select-option>
+            <ion-select-option value="Directivo">Directivo</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>Numero de empleado</ion-label>
+
+            <ion-input type="number"
+                [(ngModel)]="this.empleadoAModificar.numero"
+                name="numero"
+                value="this.empleadoAModificar.numero"
+                required>
+            </ion-input>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>Nombre</ion-label>
+
+            <ion-input type="text"
+                [(ngModel)]="this.empleadoAModificar.nombre"
+                name="nombre"
+                value="this.empleadoAModificar.nombre"
+                required>
+            </ion-input>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>Fecha de nacimiento: </ion-label>
+
+        <ion-datetime class="margentexto"
+        displayFormat="MMM DD, YYYY"
+        monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+        [(ngModel)]="this.fechaDeNacimiento"
+        value={{this.empleadoAModificar.nacimiento}}>
+      </ion-datetime>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>Domicilio</ion-label>
+
+            <ion-input type="text"
+                [(ngModel)]="this.empleadoAModificar.domicilio"
+                name="domicilio"
+                value="this.empleadoAModificar.domicilio"
+                required>
+            </ion-input>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>Celular</ion-label>
+
+            <ion-input type="number"
+                [(ngModel)]="this.empleadoAModificar.celular"
+                name="celular"
+                value="this.empleadoAModificar.celular"
+                required>
+            </ion-input>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>CURP</ion-label>
+
+        <ion-input type="text"
+            [(ngModel)]="this.empleadoAModificar.CURP"
+            name="CURP"
+            value="this.empleadoAModificar.CURP"
+            required>
+        </ion-input>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>RFC</ion-label>
+
+        <ion-input type="text"
+            [(ngModel)]="this.empleadoAModificar.RFC"
+            name="RFC"
+            value="this.empleadoAModificar.RFC"
+            required>
+        </ion-input>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>NSS</ion-label>
+
+        <ion-input type="text"
+            [(ngModel)]="this.empleadoAModificar.NSS"
+            name="NSS"
+            value="this.empleadoAModificar.NSS"
+            required>
+        </ion-input>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>Fecha de ingreso: </ion-label>
+
+      <ion-datetime class="margentexto"
+        displayFormat="MMM DD, YYYY"
+        monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+        [(ngModel)]=this.fechaDeIngreso
+        value={{this.empleadoAModificar.fechaDeIngreso}}>
+      </ion-datetime>
+
+    </ion-item>
+
+    <ion-item>
+
+        <ion-label>Contraseña</ion-label>
+
+        <ion-input type="text"
+            [(ngModel)]="this.contrasena"
+            name="contrasena"
+            value="this.empleadoAModificar.contraseña"
+            required>
+        </ion-input>
+
+    </ion-item>
+
+    <ion-item lines="none">
+
+        <ion-label>Estado de papeleria</ion-label>
+
+        <ion-radio-group required (ionChange)="radios($event)" [(ngModel)]="this.empleadoAModificar.papeleria">
+                <ion-item lines="none">
+                    <ion-radio color="success" value="completa"></ion-radio>
+                        <ion-label class="margen_izquierda_15">Completa</ion-label>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-radio color="danger" value="incompleta"></ion-radio>
+                        <ion-label class="margen_izquierda_15">Incompleta</ion-label>
+                </ion-item>
+        </ion-radio-group>
+
+    </ion-item>
+
+<div *ngIf="this.empleadoAModificar.tipo == 'Elemento'">
+
+</div>
+
+    <ion-button expand="full" (click)="agregarNuevoEmpleado()" class="botonAgregarEmpleado">Modificar Empleado</ion-button>
+
+</ion-list>
+
+</ion-content>

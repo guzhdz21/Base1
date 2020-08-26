@@ -3,10 +3,11 @@ import { StorageService } from '../../services/storage.service';
 import { FireService } from '../../services/fire.service';
 import { ModalController, Platform, NavController } from '@ionic/angular';
 import { AccionesService } from '../../services/acciones.service';
-import { Usuario, Seguridad, Cliente, Servicio } from '../../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Servicio, ServicioA } from '../../interfaces/interfaces';
 import { Subscription, interval } from 'rxjs';
 import { stringify } from 'querystring';
 import { AgregarEmpleadoPage } from '../agregar-empleado/agregar-empleado.page';
+import { ModificarEmpleadoPage } from '../modificar-empleado/modificar-empleado.page';
 
 @Component({
   selector: 'app-home-rh',
@@ -31,6 +32,72 @@ export class HomeRHPage implements OnInit {
         irA: '/login'
       },
     ];
+
+    dias: any[] = [
+      {
+        dia: "Lunes",
+        ver: false,
+        servicio: "",
+        hora: "",
+        tiempo: null,
+        color: "",
+        flecha: ""
+      },
+      {
+        dia: "Martes",
+        ver: false,
+        servicio: "",
+        hora: "",
+        tiempo: null,
+        color: "",
+        flecha: ""
+      },
+      {
+        dia: "Miercoles",
+        ver: false,
+        servicio: "",
+        hora: "",
+        tiempo: null,
+        color: "",
+        flecha: ""
+      },
+      {
+        dia: "Jueves",
+        ver: false,
+        servicio: "",
+        hora: "",
+        tiempo: null,
+        color: "",
+        flecha: ""
+      },
+      {
+        dia: "Viernes",
+        ver: false,
+        servicio: "",
+        hora: "",
+        tiempo: null,
+        color: "",
+        flecha: ""
+      },
+      {
+        dia: "Sabado",
+        ver: false,
+        servicio: "",
+        hora: "",
+        tiempo: null,
+        color: "",
+        flecha: ""
+      },
+      {
+        dia: "Domingo",
+        ver: false,
+        servicio: "",
+        hora: "",
+        tiempo: null,
+        color: "",
+        flecha: ""
+      }
+    ]
   
     //Variables visuales de asistencia
     nacimiento: string = new Date().toISOString();
@@ -156,26 +223,16 @@ export class HomeRHPage implements OnInit {
       }}]);
     }
 
-    async modificarEmpleado(idEmpleado: number, nombreEmpleado: number){
+    async modificarEmpleado(empleado: Usuario, idEmpleado: string){
 
-      /* const modal = await this.modalCtrl.create({
+       const modal = await this.modalCtrl.create({
         component: ModificarEmpleadoPage,
+        componentProps: {
+          empleadoAModificar: empleado,
+          idEmpleadoAModificar: idEmpleado
+        }
       });
       await modal.present();
-      */
-
-      await this.accionesService.presentAlertConfirmacionContraseña("¿Estás seguro de eliminar a " + nombreEmpleado + "?", "Ingresa tu contraseña" ,
-      [{text: 'Cancelar',handler: (bla) => { 
-        this.eliminacionConfirmada = false;
-        this.accionesService.presentToast("Eliminación cancelada");}
-      }, {text: 'Eliminar',handler: (bla) => {
-        if(bla.contraseñaConfirmacion == this.usuario.contraseña){
-          this.fireService.removeUsuario(idEmpleado.toString());
-          this.accionesService.presentToast("Empleado Eliminado");
-        } else{
-          this.accionesService.presentToast("Contraseña incorrecta");
-        } 
-      }}]);
     }
 
     async obtenerNacimiento() {
