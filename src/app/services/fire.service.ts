@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo, Supervisor } from '../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo, Supervisor, Cabina, Directivo } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,12 @@ export class FireService {
 
   private supervisoresColletion: AngularFirestoreCollection<Supervisor>;
   private supervisores: Observable<Supervisor[]>;
+
+  private cabinasColletion: AngularFirestoreCollection<Cabina>;
+  private cabinas: Observable<Cabina[]>;
+
+  private directivosColletion: AngularFirestoreCollection<Directivo>;
+  private directivos: Observable<Directivo[]>;
 
   constructor(private db: AngularFirestore) {
   }
@@ -241,5 +247,73 @@ export class FireService {
   async removeSupervisores(id: string) {
     await this.fireSupervisores();
     return this.supervisoresColletion.doc(id).delete();
+  }
+
+  fireCabinas() {
+    this.cabinasColletion = this.db.collection<Cabina>('cabina');
+
+    this.cabinas = this.cabinasColletion.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
+  }
+
+  async getAllCabinas() {
+    await this.fireCabinas();
+    return this.cabinas;
+  }
+
+  async addCabinas(cabina: Cabina) {
+    await this.fireCabinas();
+    return this.cabinasColletion.add(cabina);
+  }
+
+  async updateCabinas(cabina: Cabina, id: string) {
+    await this.fireCabinas();
+    return this.cabinasColletion.doc(id).update(cabina);
+  }
+
+  async removeCabinas(id: string) {
+    await this.fireCabinas();
+    return this.cabinasColletion.doc(id).delete();
+  }
+
+  fireDirectivos() {
+    this.directivosColletion = this.db.collection<Directivo>('directivos');
+
+    this.directivos = this.directivosColletion.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
+  }
+
+  async getAllDirectivos() {
+    await this.fireDirectivos();
+    return this.directivos;
+  }
+
+  async addDirectivos(directivo: Directivo) {
+    await this.fireDirectivos();
+    return this.directivosColletion.add(directivo);
+  }
+
+  async updateDirectivos(directivo: Directivo, id: string) {
+    await this.fireDirectivos();
+    return this.directivosColletion.doc(id).update(directivo);
+  }
+
+  async removeDirectivos(id: string) {
+    await this.fireDirectivos();
+    return this.directivosColletion.doc(id).delete();
   }
 }

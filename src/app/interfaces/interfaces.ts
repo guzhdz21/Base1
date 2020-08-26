@@ -26,6 +26,14 @@ export interface Seguridad {
     servicios: Asignacion[];
 }
 
+export interface Cabina {
+    numero: number;
+}
+
+export interface Directivo {
+    numero: number;
+}
+
 export interface recursosHumanos {
     numero: number;
 }

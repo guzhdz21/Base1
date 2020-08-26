@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../interfaces/interfaces';
+import { Usuario, Supervisor, Cabina, Directivo } from '../../interfaces/interfaces';
 import { FireService } from 'src/app/services/fire.service';
 import { AccionesService } from '../../services/acciones.service';
 import { NavController, ModalController } from '@ionic/angular';
+import { PushFireService } from '../../services/push-fire.service';
 
 @Component({
   selector: 'app-agregar-empleado',
@@ -14,9 +15,15 @@ export class AgregarEmpleadoPage implements OnInit {
   fechaDeNacimiento: string = new Date().toISOString();
   fechaDeIngreso: string = new Date().toISOString();
 
+  supervisores: Supervisor[];
+  cabinas: Cabina[];
+  directivos: Directivo[];
+
+
   constructor( private fireService: FireService,
                private accionesService: AccionesService,
-               private modalCtrl: ModalController) { }
+               private modalCtrl: ModalController,
+               private pushFire: PushFireService) { }
 
   ngOnInit() {
   }
@@ -60,6 +67,63 @@ export class AgregarEmpleadoPage implements OnInit {
     this.fireService.addUsuario(this.usuarioAgregar);
     this.modalCtrl.dismiss();
     this.accionesService.presentToast("Empleado agregado");
+
+    this.notificarNuevo();
+  }
+
+  async notificarNuevo() {
+    this.cargarDestinatarios();
+    await this.fireService.getAllDispositivos().then(res => {
+      res.subscribe(val => {
+        for(var supervisor of this.supervisores) {
+          for(var dispositivo of val) {
+            if(dispositivo.numero == supervisor.numero) {
+              this.pushFire.enviarPushNuevo(this.usuarioAgregar.nombre, this.usuarioAgregar.celular.toString(), dispositivo.token).subscribe();
+              break;
+            }
+          }
+        }
+
+        for(var cabina of this.cabinas) {
+          for(var dispositivo of val) {
+            if(dispositivo.numero == cabina.numero) {
+              this.pushFire.enviarPushNuevo(this.usuarioAgregar.nombre, this.usuarioAgregar.celular.toString(), dispositivo.token).subscribe();
+              break;
+            }
+          }
+        }
+
+        for(var directivo of this.directivos) {
+          for(var dispositivo of val) {
+            if(dispositivo.numero == directivo.numero) {
+              this.pushFire.enviarPushNuevo(this.usuarioAgregar.nombre, this.usuarioAgregar.celular.toString(), dispositivo.token).subscribe();
+              break;
+            }
+          }
+        }
+      });
+    });
+    
+  }
+
+  async cargarDestinatarios() {
+    await this.fireService.getAllSupervisores().then(res => {
+      res.subscribe(val => {
+        this.supervisores = val;
+      });
+    });
+
+    await this.fireService.getAllCabinas().then(res => {
+      res.subscribe(val => {
+        this.cabinas = val;
+      });
+    });
+
+    await this.fireService.getAllDirectivos().then(res => {
+      res.subscribe(val => {
+        this.directivos = val;
+      });
+    });
   }
 
 }
