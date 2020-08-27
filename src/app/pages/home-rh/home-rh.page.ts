@@ -3,11 +3,12 @@ import { StorageService } from '../../services/storage.service';
 import { FireService } from '../../services/fire.service';
 import { ModalController, Platform, NavController } from '@ionic/angular';
 import { AccionesService } from '../../services/acciones.service';
-import { Usuario, Seguridad, Cliente, Servicio, ServicioA } from '../../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Servicio, ServicioA, Supervisor, Cabina, Directivo } from '../../interfaces/interfaces';
 import { Subscription, interval } from 'rxjs';
 import { stringify } from 'querystring';
 import { AgregarEmpleadoPage } from '../agregar-empleado/agregar-empleado.page';
 import { ModificarEmpleadoPage } from '../modificar-empleado/modificar-empleado.page';
+import { PushFireService } from '../../services/push-fire.service';
 
 @Component({
   selector: 'app-home-rh',
@@ -17,6 +18,9 @@ import { ModificarEmpleadoPage } from '../modificar-empleado/modificar-empleado.
 export class HomeRHPage implements OnInit {
 
     empleados: any[] = [];
+    supervisores: Supervisor[] = [];
+    cabinas: Cabina[] = [];
+    directivos: Directivo[] = [];
     eliminacionConfirmada: boolean = false;
     contraseñaConfirmada: boolean = false;
 
@@ -155,7 +159,8 @@ export class HomeRHPage implements OnInit {
                 private modalCtrl: ModalController,
                 private plt: Platform,
                 private navCtrl: NavController,
-                private accionesService: AccionesService) { }
+                private accionesService: AccionesService,
+                private pushFire: PushFireService) { }
   
     async ngOnInit() {
 
@@ -208,7 +213,7 @@ export class HomeRHPage implements OnInit {
       });
     }
 
-    async eliminarEmpleado(idEmpleado: number, nombreEmpleado: number){
+    async eliminarEmpleado(idEmpleado: number, nombreEmpleado: string){
       await this.accionesService.presentAlertConfirmacionContraseña("¿Estás seguro de eliminar a " + nombreEmpleado + "?", "Ingresa tu contraseña" ,
       [{text: 'Cancelar',handler: (bla) => { 
         this.eliminacionConfirmada = false;
@@ -217,10 +222,68 @@ export class HomeRHPage implements OnInit {
         if(bla.contraseñaConfirmacion == this.usuario.contraseña){
           this.fireService.removeUsuario(idEmpleado.toString());
           this.accionesService.presentToast("Empleado Eliminado");
+          this.notificarEliminado(nombreEmpleado);
         } else{
           this.accionesService.presentToast("Contraseña incorrecta");
         } 
       }}]);
+    }
+
+    async notificarEliminado(nombre: string) {
+      await this.cargarDestinatarios();
+      await this.fireService.getAllDispositivos().then(res => {
+        res.subscribe(val => {
+          for(var supervisor of this.supervisores) {
+            for(var dispositivo of val) {
+              if(dispositivo.numero == supervisor.numero) {
+                this.pushFire.enviarPushEliminado(nombre, dispositivo.token).subscribe();
+                break;
+              }
+            }
+          }
+          console.log(this.supervisores);
+          for(var cabina of this.cabinas) {
+            for(var dispositivo of val) {
+              if(dispositivo.numero == cabina.numero) {
+                this.pushFire.enviarPushEliminado(nombre, dispositivo.token).subscribe();
+                break;
+              }
+            }
+          }
+  
+          for(var directivo of this.directivos) {
+            for(var dispositivo of val) {
+              if(dispositivo.numero == directivo.numero) {
+                this.pushFire.enviarPushEliminado(nombre, dispositivo.token).subscribe();
+                break;
+              }
+            }
+          }
+        });
+      });
+      
+    }
+  
+    async cargarDestinatarios() {
+      await this.fireService.getAllSupervisores().then(res => {
+        res.subscribe(val => {
+          this.supervisores = val;
+        });
+      });
+  
+      await this.fireService.getAllCabinas().then(res => {
+        res.subscribe(val => {
+          this.cabinas = val;
+        });
+      });
+  
+      await this.fireService.getAllDirectivos().then(res => {
+        res.subscribe(val => {
+          this.directivos = val;
+        });
+      });
+  
+      return;
     }
 
     async modificarEmpleado(empleado: Usuario, idEmpleado: string){

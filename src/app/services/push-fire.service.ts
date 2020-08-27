@@ -145,4 +145,23 @@ export class PushFireService {
     let url = 'https://fcm.googleapis.com/fcm/send'
     return this.http.post(url, datos, options);
   }
+
+  enviarPushEliminado(nombre: string, token: string) {
+    let datos = {
+      notification: {
+        title: "Elemento de seguridad dado de baja",
+        body: "Nombre: " + nombre
+      },
+      to: token
+    }
+
+    let options = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=AAAA8La8sO4:APA91bFUxCWkOXDyZW-2KFsh_LnXn7W-ns03du2ckrYhBR85i5slwHS57DrFPb0i-QS3fRauuPULOy9JD0v86KAnNc5NZWKqN48MG7UpLFKE3Q36NGqdxzPcHXbOgK3XNPN6_v62L1sR'
+      }
+    }
+    let url = 'https://fcm.googleapis.com/fcm/send'
+    return this.http.post(url, datos, options);
+  }
 }
