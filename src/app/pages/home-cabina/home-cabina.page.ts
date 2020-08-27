@@ -22,6 +22,13 @@ export class HomeCabinaPage implements OnInit {
   fecha: number = 1;
   carga: boolean = false;
   skeleton = true;
+  cabina = [
+    {
+      icono: 'log-out-outline',
+      nombre: 'Cerrar Sesion',
+      irA: '/login'
+    },
+  ];
 
   //Variables de funcionalidad
   backButtonSub: Subscription;
@@ -267,6 +274,13 @@ export class HomeCabinaPage implements OnInit {
 
   async llamar(i) {
     this.callNumber.callNumber(this.guardias[i].celular.toString(), true)
+  }
+
+  async redirigir(nombre: string, irA: string) {
+    if(nombre == "Cerrar Sesion") {
+      await this.storageService.eliminarUsuario();
+    }
+    await this.navCtrl.navigateRoot(irA);
   }
 
   //Metodos de entrada y salida

@@ -25,6 +25,13 @@ export class HomeRHPage implements OnInit {
     //Variables visuales generales
     titulo: string = "Informacion General";
     icono: string = "document-text";
+    rh = [
+      {
+        icono: 'log-out-outline',
+        nombre: 'Cerrar Sesion',
+        irA: '/login'
+      },
+    ];
 
     dias: any[] = [
       {
@@ -299,6 +306,13 @@ export class HomeRHPage implements OnInit {
       this.backButtonSub = this.plt.backButton.subscribeWithPriority( 10000, async () => {
         navigator["app"].exitApp();
       });
+    }
+
+    async redirigir(nombre: string, irA: string) {
+      if(nombre == "Cerrar Sesion") {
+        await this.storageService.eliminarUsuario();
+      }
+      await this.navCtrl.navigateRoot(irA);
     }
 
 }

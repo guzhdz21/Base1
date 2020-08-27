@@ -22,6 +22,13 @@ export class HomeGuardiaPage implements OnInit {
   titulo: string = "Informacion General";
   icono: string = "document-text";
   skeleton: boolean = true;
+  guardia = [
+    {
+      icono: 'log-out-outline',
+      nombre: 'Cerrar Sesion',
+      irA: '/login'
+    },
+  ];
 
   //Variables visuales de asistencia
   textoBoton: string = "";
@@ -543,6 +550,13 @@ export class HomeGuardiaPage implements OnInit {
     } else {
       this.dias[i].flecha = "arrow-down"
     }
+  }
+
+  async redirigir(nombre: string, irA: string) {
+    if(nombre == "Cerrar Sesion") {
+      await this.storageService.eliminarUsuario();
+    }
+    await this.navCtrl.navigateRoot(irA);
   }
 
   //Metodos de reporte

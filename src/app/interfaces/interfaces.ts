@@ -24,7 +24,14 @@ export interface Usuario {
 export interface Seguridad {
     numero: number;
     servicios: Asignacion[];
-    supervisor: number;
+}
+
+export interface Cabina {
+    numero: number;
+}
+
+export interface Directivo {
+    numero: number;
 }
 
 export interface recursosHumanos {
