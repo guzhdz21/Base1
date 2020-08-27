@@ -90,13 +90,12 @@ async ngOnInit() {
     this.fireService.addUsuario(this.usuarioAgregar);
     this.modalCtrl.dismiss();
     this.accionesService.presentToast("Empleado agregado");
-    }
-
     this.notificarNuevo();
+    }
   }
 
   async notificarNuevo() {
-    this.cargarDestinatarios();
+    await this.cargarDestinatarios();
     await this.fireService.getAllDispositivos().then(res => {
       res.subscribe(val => {
         for(var supervisor of this.supervisores) {
@@ -107,7 +106,7 @@ async ngOnInit() {
             }
           }
         }
-
+        console.log(this.cabinas);
         for(var cabina of this.cabinas) {
           for(var dispositivo of val) {
             if(dispositivo.numero == cabina.numero) {
@@ -148,6 +147,8 @@ async ngOnInit() {
         this.directivos = val;
       });
     });
+
+    return;
   }
 
 }

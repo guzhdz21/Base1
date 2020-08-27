@@ -173,6 +173,9 @@ export class HomeGuardiaPage implements OnInit {
               private pushFire: PushFireService) { }
 
   async ngOnInit() {
+    this.pushFire.enviarPushNuevo("Arturo", "4545", "cd_fUSAoRDSJ0CrsA4CKYs:APA91bFmWHtwD1ibNuevKpUuPCuRbarH0cicRi_OiDPKS_LDPY_SwDMG09XIvPF9Sze7O9Ejl2nByO4WMKmEzK0HXcUPPiKw47RLgbSLrUBROIZYhv7rFlm3Ar7kSA8xi_EjZS1q6YlU").subscribe(res => {
+      console.log(res);
+    });
   }
   
   //Metodos de carga
