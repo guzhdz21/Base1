@@ -15,10 +15,9 @@ export class AgregarEmpleadoPage implements OnInit {
   fechaDeNacimiento: string = new Date().toISOString();
   fechaDeIngreso: string = new Date().toISOString();
 
-  supervisores: Supervisor[];
-  cabinas: Cabina[];
-  directivos: Directivo[];
-
+  supervisores: Supervisor[] = [];
+  cabinas: Cabina[] = [];
+  directivos: Directivo[] = [];
 
   constructor( private fireService: FireService,
                private accionesService: AccionesService,
