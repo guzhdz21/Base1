@@ -18,7 +18,13 @@ export class AgregarEmpleadoPage implements OnInit {
                private accionesService: AccionesService,
                private modalCtrl: ModalController) { }
 
-  ngOnInit() {
+async ngOnInit() {
+    await this.fireService.getAllUsuarios().then(res => {
+      res.subscribe(val => {
+        this.empleados = val;
+        //this.obtenerSeguridad(val);
+      });
+    });
   }
 
   usuarioAgregar: Usuario = {
@@ -36,7 +42,9 @@ export class AgregarEmpleadoPage implements OnInit {
     papeleria: null
   }
 
+  empleados: any[] = [];
   contrasena: string;
+  numeroRepetido: boolean = false;
 
   tipoDeEmpleado(event){
     this.usuarioAgregar.tipo = event.detail.value;
@@ -46,7 +54,23 @@ export class AgregarEmpleadoPage implements OnInit {
     this.usuarioAgregar.papeleria = event.detail.value;
   }
 
+  async numeroNoRepetido() {
+    this.numeroRepetido = false;
+
+    this.empleados.forEach(element => {
+      if(element.numero == this.usuarioAgregar.numero) {
+        this.numeroRepetido = true;
+      }
+    });
+  }
+
   async agregarNuevoEmpleado(){
+
+    await this.numeroNoRepetido();
+    if(this.numeroRepetido == true){
+      this.accionesService.presentToast("Numero de empleado repetido");
+    }
+    else{
     //FECHA DE NACIMIENTO
     var diaN = new Date(this.fechaDeNacimiento);
     //@ts-ignore
@@ -60,6 +84,6 @@ export class AgregarEmpleadoPage implements OnInit {
     this.fireService.addUsuario(this.usuarioAgregar);
     this.modalCtrl.dismiss();
     this.accionesService.presentToast("Empleado agregado");
+    }
   }
-
 }
