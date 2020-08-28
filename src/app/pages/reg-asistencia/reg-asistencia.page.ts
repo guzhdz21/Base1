@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Camera } from '@ionic-native/camera/ngx';
 import { FireService } from '../../services/fire.service';
 import { Asistencia, Hora, ServicioA } from '../../interfaces/interfaces';
+import { AccionesService } from '../../services/acciones.service';
 
 @Component({
   selector: 'app-reg-asistencia',
@@ -33,7 +34,8 @@ export class RegAsistenciaPage implements OnInit {
               private modalCtrl: ModalController,
               private router: Router,
               private camera: Camera,
-              private fireService: FireService) { }
+              private fireService: FireService,
+              private accionesService: AccionesService) { }
 
   ngOnInit() {
     this.obtenerHora();
@@ -88,50 +90,57 @@ export class RegAsistenciaPage implements OnInit {
   }
 
   async registrar() {
-    var fecha = new Date();
-    var año = fecha.getFullYear();
-    var mes = fecha.getMonth();
-    var dia = fecha.getDate();
-    var fecha2 = new Date(año, mes, dia, 0, 0, 0, 0);
+    var ok = false;
+    await this.accionesService.presentAlertPersonalizada([{text: 'Ok', handler: (blah) => {ok = true}},
+    {text: 'Cancelar', handler: (blah) => {}}], "Registrar Asistencia" , 
+    "Seguro que deseas registrar tu asistencia?, despues no podras volverla a registrar");
 
-    var hora = fecha.getHours();
-    var minutos = fecha.getMinutes();
-    var horario: Hora = {
-      hora: hora,
-      minutos: minutos
-    }
+    if(ok) {
+      var fecha = new Date();
+      var año = fecha.getFullYear();
+      var mes = fecha.getMonth();
+      var dia = fecha.getDate();
+      var fecha2 = new Date(año, mes, dia, 0, 0, 0, 0);
 
-    var retardo = false;
-    var horaRetardo = this.servicio.horario.hora;
-    var minutosRetardo = this.servicio.horario.minutos + 20;
-    if(minutosRetardo > 59) {
-      horaRetardo += 1;
-      minutosRetardo -= 60;
-      if(horaRetardo == 25) {
-        horaRetardo = 0;
+      var hora = fecha.getHours();
+      var minutos = fecha.getMinutes();
+      var horario: Hora = {
+        hora: hora,
+        minutos: minutos
       }
-    }
-    if(horario.hora == horaRetardo && horario.minutos > minutosRetardo) {
-      retardo = true;
-    }
 
-    var asistencia: Asistencia = {
-      // @ts-ignore
-      dia: fecha2,
-      fotos: {
-        imagenP: this.imagenP,
-        iamgenL: this.imagenL
-      },
-      horario: horario,
-      numero: this.numero,
-      servicio: this.servicio,
-      retardo: retardo,
-      valido: false
+      var retardo = false;
+      var horaRetardo = this.servicio.horario.hora;
+      var minutosRetardo = this.servicio.horario.minutos + 20;
+      if(minutosRetardo > 59) {
+        horaRetardo += 1;
+        minutosRetardo -= 60;
+        if(horaRetardo == 25) {
+          horaRetardo = 0;
+        }
+      }
+      if(horario.hora == horaRetardo && horario.minutos > minutosRetardo) {
+        retardo = true;
+      }
+
+      var asistencia: Asistencia = {
+        // @ts-ignore
+        dia: fecha2,
+        fotos: {
+          imagenP: this.imagenP,
+          iamgenL: this.imagenL
+        },
+        horario: horario,
+        numero: this.numero,
+        servicio: this.servicio,
+        retardo: retardo,
+        valido: false
+      }
+      await this.fireService.addAsistencias(asistencia);
+      this.modalCtrl.dismiss( {
+        registrado: true
+      });
     }
-    await this.fireService.addAsistencias(asistencia);
-    this.modalCtrl.dismiss( {
-      registrado: true
-    });
   }
 
   async ionViewDidEnter() {

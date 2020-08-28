@@ -187,7 +187,15 @@ export class HomeSupervisorPage implements OnInit {
 
   async redirigir(nombre: string, irA: string) {
     if(nombre == "Cerrar Sesion") {
-      await this.storageService.eliminarUsuario();
+      var ok = false;
+      await this.accionesService.presentAlertPersonalizada([{text: 'Ok', handler: (blah) => {ok = true}},
+      {text: 'Cancelar', handler: (blah) => {}}], "Cerrar Sesion" , 
+      "Seguro que deseas cerrar sesion?");
+      if(ok) {
+        await this.storageService.eliminarUsuario();
+      } else {
+        return;
+      }
     }
     await this.navCtrl.navigateRoot(irA);
   }
