@@ -16,6 +16,14 @@ export class HomeRmPage implements OnInit {
 
       //Variables visuales de asistencia
       nacimiento: string = new Date().toISOString();
+      rm = [
+        {
+          icono: 'log-out-outline',
+          nombre: 'Cerrar Sesion',
+          irA: '/login'
+        },
+      ];
+    
   
       //Variables del boton asistencia
       asistenciaRegistrada: boolean = false;

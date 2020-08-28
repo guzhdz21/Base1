@@ -21,6 +21,25 @@ export interface Usuario {
     papeleria: string;
 }
 
+export interface Comprador {
+    nacimiento: Timestamp;
+    nombre: string;
+    numero: number;
+    tipo: string;
+    fechaDeIngreso: Timestamp;
+    domicilio: string;
+    celular: number;
+    CURP: string;
+    RFC: string;
+    NSS: string;
+    papeleria: string;
+    activo: boolean;
+    articulo: string;
+    cantidad: number;
+    pagosR: number;
+    pagosT: number
+}
+
 export interface Seguridad {
     numero: number;
     servicios: Asignacion[];

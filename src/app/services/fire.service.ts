@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo, Supervisor, Cabina, Directivo } from '../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo, Supervisor, Cabina, Directivo, Comprador } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +32,9 @@ export class FireService {
 
   private directivosColletion: AngularFirestoreCollection<Directivo>;
   private directivos: Observable<Directivo[]>;
+
+  private compradoresColletion: AngularFirestoreCollection<Comprador>;
+  private compradores: Observable<Comprador[]>;
 
   constructor(private db: AngularFirestore) {
   }
@@ -315,5 +318,39 @@ export class FireService {
   async removeDirectivos(id: string) {
     await this.fireDirectivos();
     return this.directivosColletion.doc(id).delete();
+  }
+
+  fireCompradores() {
+    this.compradoresColletion = this.db.collection<Comprador>('compradores');
+
+    this.compradores = this.compradoresColletion.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
+  }
+
+  async getAllCompradores() {
+    await this.fireCompradores();
+    return this.compradores;
+  }
+
+  async addCompradores(comprador: Comprador) {
+    await this.fireCompradores();
+    return this.compradoresColletion.add(comprador);
+  }
+
+  async updateCompradores(comprador: Comprador, id: string) {
+    await this.fireCompradores();
+    return this.compradoresColletion.doc(id).update(comprador);
+  }
+
+  async removeCompradores(id: string) {
+    await this.fireCompradores();
+    return this.compradoresColletion.doc(id).delete();
   }
 }

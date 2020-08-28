@@ -24,10 +24,15 @@ export class HomeCabinaPage implements OnInit {
   skeleton = true;
   cabina = [
     {
+      icono: 'download-outline',
+      nombre: 'Excel',
+      irA: ''
+    },
+    {
       icono: 'log-out-outline',
       nombre: 'Cerrar Sesion',
       irA: '/login'
-    },
+    }
   ];
 
   //Variables de funcionalidad
@@ -288,6 +293,18 @@ export class HomeCabinaPage implements OnInit {
         return;
       }
     }
+    if(nombre == "Excel") {
+      var ok = false;
+      await this.accionesService.presentAlertPersonalizada([{text: 'Ok', handler: (blah) => {ok = true}},
+      {text: 'Cancelar', handler: (blah) => {}}], "Descargar archivo Excel" , 
+      "Deseas descargar un registro de los servicios de los guardias en un archivo de Excel?");
+      if(ok) {
+        await this.excel();
+        return;
+      } else {
+        return;
+      }
+    }
     await this.navCtrl.navigateRoot(irA);
   }
 
@@ -401,10 +418,6 @@ export class HomeCabinaPage implements OnInit {
       XLSX.utils.book_append_sheet(wb, ws, cliente.nombre);
     }
     XLSX.writeFile(wb, "Guardias" +'.xlsx');
-  }
-
-  async exportToExcel(){
-
   }
 
 }

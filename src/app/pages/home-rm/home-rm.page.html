@@ -1,8 +1,53 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>home-rm</ion-title>
+<ion-router-outlet id="rm"></ion-router-outlet>
+<ion-header no-border>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button menu="rm"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Global Fhas</ion-title>
   </ion-toolbar>
 </ion-header>
+
+<ion-menu side="start"
+          menuId="rm"
+          contentId="rm">
+  
+  <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menú</ion-title>
+      </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+
+    <ion-menu-toggle>
+
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img src="/assets/images/Logo.JPG">
+        </ion-avatar>
+        <ion-label>{{usuario.nombre}}</ion-label>
+      </ion-item>
+        
+      </ion-menu-toggle>
+      
+      <ion-list>
+        <ion-menu-toggle *ngFor="let opcion of rm">
+          <ion-item (click)="redirigir(opcion.nombre, opcion.irA)">
+            <ion-icon color="primary" 
+                      [name]="opcion.icono" 
+                      slot="start"
+                      class="masleft"></ion-icon>
+            <ion-label>{{opcion.nombre}}</ion-label>
+          </ion-item>
+
+        </ion-menu-toggle> 
+      </ion-list>
+
+  </ion-content>
+</ion-menu>
 
 <ion-content>
 
