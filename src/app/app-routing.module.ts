@@ -54,6 +54,10 @@ const routes: Routes = [
     path: 'modificar-empleado',
     loadChildren: () => import('./pages/modificar-empleado/modificar-empleado.module').then( m => m.ModificarEmpleadoPageModule)
   },
+  {
+    path: 'home-rm',
+    loadChildren: () => import('./pages/home-rm/home-rm.module').then( m => m.HomeRmPageModule)
+  },
 
 
 ];
