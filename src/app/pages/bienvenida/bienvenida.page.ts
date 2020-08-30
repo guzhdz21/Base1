@@ -117,6 +117,11 @@ export class BienvenidaPage implements OnInit {
         this.router.navigate(["/home-cabina"]);
         break;
       }
+
+      case 'Recursos materiales' : {
+        this.router.navigate(["/home-rm"]);
+        break;
+      }
     }
     return;
   }

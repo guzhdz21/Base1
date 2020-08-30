@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { HomeRmPageRoutingModule } from './home-rm-routing.module';
 
 import { HomeRmPage } from './home-rm.page';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomeRmPageRoutingModule
+    HomeRmPageRoutingModule,
+    PipesModule
   ],
   declarations: [HomeRmPage]
 })

@@ -49,6 +49,24 @@
   </ion-content>
 </ion-menu>
 
+<ion-searchbar animated (ionChange)="buscar($event)" class="bien"></ion-searchbar>
+
 <ion-content>
+
+<ion-list>
+
+  <ion-item *ngFor="let e of empleados | filtro: textoBuscar: 'nombre'">
+    <ion-label (click)="abrirInformacion(e)">{{e.nombre}}</ion-label>
+    <ion-button color="secondary" (click)="modificarEmpleado(e, e.id)"><ion-icon name="settings"></ion-icon></ion-button>
+    <ion-button color="danger" (click)="eliminarEmpleado(e.id, e.nombre)"><ion-icon name="trash"></ion-icon></ion-button>
+  </ion-item>
+
+</ion-list>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" (click)="agregarNuevoEmpleado()" class="botonAgregarEmpleado">Agregar Empleado</ion-button>
+  </ion-toolbar>
+</ion-footer>
 
 </ion-content>

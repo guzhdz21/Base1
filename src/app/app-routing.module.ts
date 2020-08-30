@@ -58,6 +58,10 @@ const routes: Routes = [
     path: 'home-rm',
     loadChildren: () => import('./pages/home-rm/home-rm.module').then( m => m.HomeRmPageModule)
   },
+  {
+    path: 'agregar-comprador',
+    loadChildren: () => import('./pages/agregar-comprador/agregar-comprador.module').then( m => m.AgregarCompradorPageModule)
+  },
 
 
 ];
