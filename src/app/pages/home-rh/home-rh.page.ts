@@ -36,72 +36,7 @@ export class HomeRHPage implements OnInit {
         irA: '/login'
       },
     ];
-
-    dias: any[] = [
-      {
-        dia: "Lunes",
-        ver: false,
-        servicio: "",
-        hora: "",
-        tiempo: null,
-        color: "",
-        flecha: ""
-      },
-      {
-        dia: "Martes",
-        ver: false,
-        servicio: "",
-        hora: "",
-        tiempo: null,
-        color: "",
-        flecha: ""
-      },
-      {
-        dia: "Miercoles",
-        ver: false,
-        servicio: "",
-        hora: "",
-        tiempo: null,
-        color: "",
-        flecha: ""
-      },
-      {
-        dia: "Jueves",
-        ver: false,
-        servicio: "",
-        hora: "",
-        tiempo: null,
-        color: "",
-        flecha: ""
-      },
-      {
-        dia: "Viernes",
-        ver: false,
-        servicio: "",
-        hora: "",
-        tiempo: null,
-        color: "",
-        flecha: ""
-      },
-      {
-        dia: "Sabado",
-        ver: false,
-        servicio: "",
-        hora: "",
-        tiempo: null,
-        color: "",
-        flecha: ""
-      },
-      {
-        dia: "Domingo",
-        ver: false,
-        servicio: "",
-        hora: "",
-        tiempo: null,
-        color: "",
-        flecha: ""
-      }
-    ]
+    skeleton: boolean = true;
   
     //Variables visuales de asistencia
     nacimiento: string = new Date().toISOString();
@@ -183,6 +118,9 @@ export class HomeRHPage implements OnInit {
       this.autenSub = await this.autentificacion.subscribe(x => {
         this.cargarUsuarioComparar();
       });
+
+      await this.delay(2000);
+      this.skeleton = false;
     }
   
     async obtenerUsuarioLocal() {
@@ -386,4 +324,7 @@ export class HomeRHPage implements OnInit {
       await this.navCtrl.navigateRoot(irA);
     }
 
+    delay(ms: number) {
+      return new Promise( resolve => setTimeout(resolve, ms) );
+    }
 }

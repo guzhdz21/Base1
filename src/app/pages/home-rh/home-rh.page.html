@@ -49,25 +49,34 @@
   </ion-content>
 </ion-menu>
 
+<div class="bien divs" *ngIf="!skeleton">
+    <ion-badge color="primary" class="centrari">Lista del personal</ion-badge>
 
-<ion-searchbar animated (ionChange)="buscar($event)" class="bien"></ion-searchbar>
+    <ion-icon name="people" color="primary" class="centrari icono1"></ion-icon>
+</div>
+
+<ion-searchbar animated (ionChange)="buscar($event)" class="bien" *ngIf="!skeleton"></ion-searchbar>
 
 <ion-content>
 
-  <ion-list>
+  <app-skeleton-rh *ngIf="skeleton"></app-skeleton-rh>
 
-    <ion-item *ngFor="let e of empleados | filtro: textoBuscar: 'nombre'">
-      <ion-label (click)="abrirInformacion(e)">{{e.nombre}}</ion-label>
-      <ion-button color="secondary" (click)="modificarEmpleado(e, e.id)"><ion-icon name="settings"></ion-icon></ion-button>
-      <ion-button color="danger" (click)="eliminarEmpleado(e.id, e.nombre)"><ion-icon name="trash"></ion-icon></ion-button>
-    </ion-item>
+  <div *ngIf="!skeleton">
+    <ion-list>
 
-  </ion-list>
-
-  <ion-footer>
-    <ion-toolbar>
-      <ion-button expand="full" (click)="agregarNuevoEmpleado()" class="botonAgregarEmpleado">Agregar Empleado</ion-button>
-    </ion-toolbar>
-  </ion-footer>
+      <ion-item *ngFor="let e of empleados | filtro: textoBuscar: 'nombre'">
+        <ion-label (click)="abrirInformacion(e)">{{e.nombre}}</ion-label>
+        <ion-button color="secondary" (click)="modificarEmpleado(e, e.id)"><ion-icon name="settings"></ion-icon></ion-button>
+        <ion-button color="danger" (click)="eliminarEmpleado(e.id, e.nombre)"><ion-icon name="trash"></ion-icon></ion-button>
+      </ion-item>
+  
+    </ion-list>
+  
+    <ion-footer>
+      <ion-toolbar>
+        <ion-button expand="full" (click)="agregarNuevoEmpleado()" class="botonAgregarEmpleado">Agregar Empleado</ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </div>
 
 </ion-content>
