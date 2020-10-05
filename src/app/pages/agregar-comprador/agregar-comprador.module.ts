@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { AgregarCompradorPageRoutingModule } from './agregar-comprador-routing.module';
 
 import { AgregarCompradorPage } from './agregar-comprador.page';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AgregarCompradorPageRoutingModule
+    AgregarCompradorPageRoutingModule,
+    PipesModule
   ],
   declarations: [AgregarCompradorPage]
 })
