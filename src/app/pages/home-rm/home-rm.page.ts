@@ -7,6 +7,7 @@ import { PushFireService } from 'src/app/services/push-fire.service';
 import { Subscription, interval } from 'rxjs';
 import { Usuario } from 'src/app/interfaces/interfaces';
 import { AgregarCompradorPage } from '../agregar-comprador/agregar-comprador.page';
+import { Comprador } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-home-rm',
@@ -151,30 +152,17 @@ async ngOnInit() {
     this.nacimiento = await this.storageService.cargarNacimiento();
   }
 
-  
   buscar( event ){
     this.textoBuscar = event.detail.value;
   }
 
-  async abrirInformacion( empleadoInfo: Usuario){
-    var diaN = empleadoInfo.nacimiento.toDate().getDate();
-    var mesN = empleadoInfo.nacimiento.toDate().getMonth() + 1;
-    console.log(" la var: " + mesN)
-    console.log(" la completa: " + empleadoInfo.nacimiento.toDate())
-    var anoN = empleadoInfo.nacimiento.toDate().getFullYear();
-    var fechaN = diaN + "/" + mesN + "/" + anoN; 
+  async abrirInformacion( empleadoInfo: Comprador){
 
-    var diaI = empleadoInfo.fechaDeIngreso.toDate().getDate();
-    var mesI = empleadoInfo.fechaDeIngreso.toDate().getMonth() + 1;
-    var anoI = empleadoInfo.fechaDeIngreso.toDate().getFullYear();
-    var fechaI = diaI + "/" + mesI + "/" + anoI; 
-
-    await this.accionesService.presentAlertGenericaInfoEmpleado(empleadoInfo.nombre, "<br>Número: " + empleadoInfo.numero + "<br><br>Puesto: " + empleadoInfo.tipo + "<br><br>Celular: " + empleadoInfo.celular + "<br><br>Fecha de nacimiento: " + fechaN +
-    "<br><br>CURP: " + empleadoInfo.CURP + "<br><br>RFC: " + empleadoInfo.RFC + "<br><br>NSS: " + empleadoInfo.NSS +"<br><br>Domicilio: " + empleadoInfo.domicilio + "<br><br>Papelería: " + empleadoInfo.papeleria + "<br><br>Fecha de alta: " + fechaI);
+    await this.accionesService.presentAlertGenericaInfoEmpleado(empleadoInfo.nombre, "<br><br>Activo: " + empleadoInfo.activo + "<br><br>Articulo: " + empleadoInfo.articulo + 
+    "<br><br>Cantidad total: " + empleadoInfo.cantidad + "<br><br>Pagos totales: " + empleadoInfo.pagosT + "<br><br>Pagos restantes: " + empleadoInfo.pagosR);
   }
 
-  
-  async agregarNuevoEmpleado() {
+  async agregarNuevaCompra() {
     const modal = await this.modalCtrl.create({
       component: AgregarCompradorPage,
     });
@@ -195,20 +183,22 @@ async ngOnInit() {
 
   async autentificar() {
     if(this.user && this.usuarioLocal != null) {
-      if(this.user.numero != this.usuarioLocal.numero 
-        || this.usuarioLocal.contraseña != this.user.contraseña 
-        || this.user.tipo != "Recursos materiales") {
-        await this.autenSub.unsubscribe();
-        await this.timerSub.unsubscribe();
-        await this.procesoSalida();
-        await this.navCtrl.navigateRoot("/login");
+      if(this.user.tipo == "Recursos materiales" || this.user.tipo == "Recursos humanos"){}
+      else{
+        if(this.user.numero != this.usuarioLocal.numero 
+          || this.usuarioLocal.contraseña != this.user.contraseña) {
+          await this.autenSub.unsubscribe();
+          await this.timerSub.unsubscribe();
+          await this.procesoSalida();
+          await this.navCtrl.navigateRoot("/login");
+       }
       }
     }
-    return;
-  }
+      return;
+   }
 
   async procesoSalida() {
-    await this.accionesService.presentAlertGenerica("Alerta de Seguridad", "Algunos de tus datos indispenables" 
+    await this.accionesService.presentAlertGenerica("Alerta de Seguridad", "Algunos de tus datos indispenables"
         + " (contraseña, numero, etc..) han sido modificados, por seguridad tendras que volver a ingresar a tu cuenta");
     await this.storageService.guardarId(null);
     await this.storageService.guardarUsuario(this.usuarioFake);
@@ -228,5 +218,11 @@ async ngOnInit() {
     }
     await this.navCtrl.navigateRoot(irA);
   }
-  
+
+async eliminarPago(empleado: Comprador, id: string){
+    empleado.pagosR--;
+    this.fireService.updateCompradores(empleado, id);
+    this.accionesService.presentToast("Pago restante eliminado");
+  }
+
 }

@@ -1,9 +1,31 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>agregar-comprador</ion-title>
+<ion-router-outlet id="rm"></ion-router-outlet>
+<ion-header no-border>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button menu="rm"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Selecciona el comprador</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-searchbar animated (ionChange)="buscar($event)" class="bien"></ion-searchbar>
+
+  <ion-list>
+
+    <ion-item *ngFor="let e of empleados | filtro: textoBuscar: 'nombre'">
+      <ion-label (click)="empleadoSeleccionado(e, e.id)">{{e.nombre}}</ion-label>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-footer>
+    <ion-toolbar>
+      <ion-button expand="full" (click)="compradorDadoDeBaja()" class="botonAgregarEmpleado">El comprador no está en la lista</ion-button>
+    </ion-toolbar>
+  </ion-footer>
 
 </ion-content>

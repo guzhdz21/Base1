@@ -42,8 +42,79 @@ export class AccionesService {
     await alert.onDidDismiss();
   }
 
-  async presentAlertConfirmacionContraseña(header: string, message: string, botones: any[]) {
+  async presentAlertDatosCompra(header: string, message: string, botones: any[]) {
+
+    const alert = await this.alertCtrl.create({
+      header: header,
+      message: message,
+      inputs: [ {
+          name: 'Articulo',
+          placeholder: 'Nombre del articulo',
+          type: 'text',
+          value: null
+        },
+        {
+          name: 'Precio',
+          placeholder: 'Precio total',
+          type: 'number',
+          value: null
+        },
+        {
+          name: 'numeroDePagos',
+          placeholder: 'Numero de pagos',
+          type: 'number',
+          value: null
+        }
+      ],
+      buttons: [] = botones,
+      mode: "md",
+      backdropDismiss: false
+    });
+    alert.present();
+    await alert.onDidDismiss();
+  }
+
+  async presentAlertDatosCompraDadoDeBaja(header: string, message: string, botones: any[]) {
       
+    const alert = await this.alertCtrl.create({
+      header: header,
+      message: message,
+      inputs: [ 
+        {
+          name: 'nombreComprador',
+          placeholder: 'Nombre del comprador',
+          type: 'text',
+          value: null
+        },
+        {
+          name: 'Articulo',
+          placeholder: 'Nombre del articulo',
+          type: 'text',
+          value: null
+        },
+        {
+          name: 'Precio',
+          placeholder: 'Precio total',
+          type: 'number',
+          value: null
+        },
+        {
+          name: 'numeroDePagos',
+          placeholder: 'Numero de pagos',
+          type: 'number',
+          value: null
+        }
+      ],
+      buttons: [] = botones,
+      mode: "md",
+      backdropDismiss: false
+    });
+    alert.present();
+    await alert.onDidDismiss();
+  }
+
+  async presentAlertConfirmacionContraseña(header: string, message: string, botones: any[]) {
+
     const alert = await this.alertCtrl.create({
       header: header,
       message: message,
@@ -62,7 +133,7 @@ export class AccionesService {
   }
 
   async presentAlertGenerica(header: string, message: string) {
-      
+
     const alert = await this.alertCtrl.create({
       header: header,
       message: message,
