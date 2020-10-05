@@ -49,35 +49,36 @@
   </ion-content>
 </ion-menu>
 
+<div *ngIf="!skeleton">
+    <ion-toolbar>
+        <ion-segment (ionChange)="segment($event)" value="Asistencia">
+            <ion-segment-button value="Asistencia">
+              <ion-label>Asistencia</ion-label>
+            </ion-segment-button>
+
+            <ion-segment-button value="Reportar">
+              <ion-label>Reportar</ion-label>
+            </ion-segment-button>
+
+            <ion-segment-button value="Asignaciones">
+                <ion-label>Asignaciones</ion-label>
+              </ion-segment-button>
+          </ion-segment>
+    </ion-toolbar>
+
+    <ion-item lines="none"> 
+        <ion-badge color="primary" class="centrari">{{titulo}}</ion-badge>
+    </ion-item>
+
+    <ion-item lines="none">
+        <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
+    </ion-item>
+</div>
+
 <ion-content>
     <app-skeleton *ngIf="skeleton"></app-skeleton>
 
     <div *ngIf="!skeleton">
-        <ion-toolbar>
-            <ion-segment (ionChange)="segment($event)" value="Asistencia">
-                <ion-segment-button value="Asistencia">
-                  <ion-label>Asistencia</ion-label>
-                </ion-segment-button>
-    
-                <ion-segment-button value="Reportar">
-                  <ion-label>Reportar</ion-label>
-                </ion-segment-button>
-    
-                <ion-segment-button value="Asignaciones">
-                    <ion-label>Asignaciones</ion-label>
-                  </ion-segment-button>
-              </ion-segment>
-        </ion-toolbar>
-    
-        <ion-item lines="none"> 
-            <ion-badge color="primary" class="centrari">{{titulo}}</ion-badge>
-        </ion-item>
-
-        <ion-item lines="none">
-            <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
-        </ion-item>
-        
-    
         <div *ngIf="titulo == 'Informacion General' && existe">
             <ion-list>
                 <ion-item>

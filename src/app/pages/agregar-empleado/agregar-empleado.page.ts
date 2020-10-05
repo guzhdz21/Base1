@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario, Supervisor, Cabina, Directivo } from '../../interfaces/interfaces';
+import { Usuario, Supervisor, Cabina, Directivo, Seguridad } from '../../interfaces/interfaces';
 import { FireService } from 'src/app/services/fire.service';
 import { AccionesService } from '../../services/acciones.service';
 import { NavController, ModalController } from '@ionic/angular';
@@ -88,9 +88,109 @@ async ngOnInit() {
 
     this.usuarioAgregar.contraseña = this.contrasena; //Igualamos contraseña
     this.fireService.addUsuario(this.usuarioAgregar);
+    await this.ingresarSegunTipo();
+
     this.modalCtrl.dismiss();
     this.accionesService.presentToast("Empleado agregado");
     this.notificarNuevo();
+    }
+  }
+
+  async ingresarSegunTipo() {
+    switch (this.usuarioAgregar.tipo) {
+      case 'Elemento seguridad': {
+        var seguridad: Seguridad = {
+          numero: this.usuarioAgregar.numero,
+          servicios: [
+            {
+              dia: "Lunes",
+              servicio: {
+                cliente: null,
+                servicio: null,
+                horario: {
+                  hora: null,
+                  minutos: null
+                },
+                tipo: null
+              }
+            },
+            {
+              dia: "Martes",
+              servicio: {
+                cliente: null,
+                servicio: null,
+                horario: {
+                  hora: null,
+                  minutos: null
+                },
+                tipo: null
+              }
+            },
+            {
+              dia: "Miercoles",
+              servicio: {
+                cliente: null,
+                servicio: null,
+                horario: {
+                  hora: null,
+                  minutos: null
+                },
+                tipo: null
+              }
+            },
+            {
+              dia: "Jueves",
+              servicio: {
+                cliente: null,
+                servicio: null,
+                horario: {
+                  hora: null,
+                  minutos: null
+                },
+                tipo: null
+              }
+            },
+            {
+              dia: "Viernes",
+              servicio: {
+                cliente: null,
+                servicio: null,
+                horario: {
+                  hora: null,
+                  minutos: null
+                },
+                tipo: null
+              }
+            },
+            {
+              dia: "Sabado",
+              servicio: {
+                cliente: null,
+                servicio: null,
+                horario: {
+                  hora: null,
+                  minutos: null
+                },
+                tipo: null
+              }
+            },
+            {
+              dia: "Domingo",
+              servicio: {
+                cliente: null,
+                servicio: null,
+                horario: {
+                  hora: null,
+                  minutos: null
+                },
+                tipo: null
+              }
+            }
+          ]
+        }
+        await this.fireService.addSeguridad(seguridad);
+        break;
+      }
     }
   }
 
