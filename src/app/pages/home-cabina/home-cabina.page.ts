@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
-import { Usuario, Seguridad, Cliente } from '../../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Hora, ServicioA, Asistencia } from '../../interfaces/interfaces';
 import { StorageService } from '../../services/storage.service';
 import { FireService } from '../../services/fire.service';
 import { NavController, Platform, ModalController } from '@ionic/angular';
 import { AccionesService } from '../../services/acciones.service';
 import { AsistenciaInfo1Page } from '../asistencia-info1/asistencia-info1.page';
-import { CallNumber } from '@ionic-native/call-number/ngx';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -83,8 +82,7 @@ export class HomeCabinaPage implements OnInit {
               private navCtrl: NavController,
               private accionesService: AccionesService,
               private plt: Platform,
-              private modalCtrl: ModalController,
-              private callNumber: CallNumber) { }
+              private modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
@@ -256,29 +254,23 @@ export class HomeCabinaPage implements OnInit {
   }
 
   async abrirAsistencia(i) {
-    if( this.guardias[i].asistencia != null) {
-      const modal = await this.modalCtrl.create({
-        component: AsistenciaInfo1Page,
-        componentProps: {
-          asistencia: this.guardias[i].asistencia,
-          nombre: this.guardias[i].nombre,
-          seguridad: this.guardias[i].seguridad,
-          id: this.guardias[i].asistencia.id
-        }
-      });
-      await modal.present();
-      await modal.onDidDismiss();
-    } else {
-      this.accionesService.presentToast("El elemento no tiene registro de asistencia");
+    var id = null;
+    if(this.guardias[i].asistencia != null) {
+      id = this.guardias[i].asistencia.id
     }
+    const modal = await this.modalCtrl.create({
+      component: AsistenciaInfo1Page,
+      componentProps: {
+        id: id,
+        guardia: this.guardias[i]
+      }
+    });
+    await modal.present();
+    await modal.onDidDismiss();
   }
 
   async buscar(event) {
     this.textoBuscar = event.detail.value;
-  }
-
-  async llamar(i) {
-    this.callNumber.callNumber(this.guardias[i].celular.toString(), true)
   }
 
   async redirigir(nombre: string, irA: string) {
@@ -385,6 +377,8 @@ export class HomeCabinaPage implements OnInit {
     }
     this.user = null;
     this.textoBuscar = "";
+    this.excelArray = [];
+    this.clientes = [];
     return;
   }
 

@@ -8,13 +8,19 @@ import { HomeSupervisorPageRoutingModule } from './home-supervisor-routing.modul
 
 import { HomeSupervisorPage } from './home-supervisor.page';
 import { ComponentsModule } from '../../components/components.module';
+import { AlertasIncidentesPage } from '../alertas-incidentes/alertas-incidentes.page';
+import { AlertasIncidentesPageModule } from '../alertas-incidentes/alertas-incidentes.module';
 
 @NgModule({
+  entryComponents: [
+    AlertasIncidentesPage
+  ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     HomeSupervisorPageRoutingModule,
+    AlertasIncidentesPageModule,
     ComponentsModule
   ],
   declarations: [HomeSupervisorPage]

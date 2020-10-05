@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform, NavController } from '@ionic/angular';
+import { Platform, NavController, ModalController } from '@ionic/angular';
 import { Subscription, interval } from 'rxjs';
 import { StorageService } from '../../services/storage.service';
-import { Usuario } from '../../interfaces/interfaces';
+import { Usuario, Supervisor } from '../../interfaces/interfaces';
 import { FireService } from '../../services/fire.service';
 import { AccionesService } from '../../services/acciones.service';
+import { AlertasIncidentesPage } from '../alertas-incidentes/alertas-incidentes.page';
 
 @Component({
   selector: 'app-home-supervisor',
@@ -20,7 +21,7 @@ export class HomeSupervisorPage implements OnInit {
     {
       icono: 'warning',
       nombre: 'Alertas Incidentes',
-      irA: '/login'
+      irA: ''
     },
     {
       icono: 'location',
@@ -54,6 +55,7 @@ export class HomeSupervisorPage implements OnInit {
     NSS: null,
     papeleria: null
   }
+  supervisorData: Supervisor;
 
   //Variables de los datos del usuario
   usuarioLocal: Usuario = null;
@@ -77,7 +79,8 @@ export class HomeSupervisorPage implements OnInit {
               private storageService: StorageService,
               private fireService: FireService,
               private navCtrl: NavController,
-              private accionesService: AccionesService) { }
+              private accionesService: AccionesService,
+              private modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
@@ -97,6 +100,20 @@ export class HomeSupervisorPage implements OnInit {
     await this.fireService.getUsuario(id).then(res => {
       res.subscribe(val => {
         this.usuario = val;
+        this.obtenerSupervisor(this.usuario.numero);
+      });
+    });
+  }
+
+  async obtenerSupervisor(numero: number) {
+    await this.fireService.getAllSupervisores().then(res => {
+      res.subscribe(val => {
+        for(var supervisor of val) {
+          if(supervisor.numero == numero) {
+            this.supervisorData = supervisor;
+            break;
+          }
+        }
       });
     });
   }
@@ -193,11 +210,28 @@ export class HomeSupervisorPage implements OnInit {
       "Seguro que deseas cerrar sesion?");
       if(ok) {
         await this.storageService.eliminarUsuario();
+        await this.navCtrl.navigateRoot(irA);
       } else {
         return;
       }
     }
-    await this.navCtrl.navigateRoot(irA);
+    switch (nombre) {
+      case "Alertas Incidentes": {
+        await this.abrirAlertas();
+        break;
+      }
+    }
+  }
+
+  async abrirAlertas() {
+    const modal = await this.modalCtrl.create({
+      component: AlertasIncidentesPage,
+      componentProps: {
+        supervisor: this.supervisorData
+      }
+    });
+    await modal.present();
+    await modal.onDidDismiss();
   }
 
   //Metodos de entrada y salida

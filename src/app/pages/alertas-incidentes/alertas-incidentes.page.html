@@ -1,0 +1,35 @@
+<app-header-modal titulo="Alertas Incidentes" ruta="home-supervisor"></app-header-modal>
+
+<ion-content>
+  <ion-item lines="none"> 
+    <ion-badge color="primary" class="centrari titulo">Lista de alertas</ion-badge>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-icon name="megaphone" color="primary" class="centrari icono1"></ion-icon>
+  </ion-item>
+
+  <ion-list>
+    <div *ngFor="let alerta of alertas; let i = index" (click)="abrirAlerta(i)">
+      <ion-list>
+        <ion-item lines="none">
+          <ion-icon name="shield" slot="start" color="primary"></ion-icon>
+          <ion-label>{{alerta.nombre}}</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-chip color="success">
+            <ion-icon name="location"></ion-icon>
+            <ion-label>{{alerta.servicio}}</ion-label>
+          </ion-chip>
+
+          <ion-chip color="primary" slot="end">
+            <ion-icon name="alarm"></ion-icon>
+            <ion-label>{{alerta.horaShow}}</ion-label>
+          </ion-chip>
+          
+        </ion-item>
+      </ion-list>
+    </div>
+  </ion-list>
+</ion-content>

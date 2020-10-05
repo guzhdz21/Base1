@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Asistencia, Usuario, Seguridad } from '../../interfaces/interfaces';
+import { Asistencia, Usuario, Seguridad, Hora, ServicioA } from '../../interfaces/interfaces';
 import { FireService } from '../../services/fire.service';
 import { AccionesService } from '../../services/acciones.service';
 import { ModalController } from '@ionic/angular';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 
 @Component({
   selector: 'app-asistencia-info1',
@@ -11,10 +12,8 @@ import { ModalController } from '@ionic/angular';
 })
 export class AsistenciaInfo1Page implements OnInit {
 
-  @Input() asistencia : Asistencia;
-  @Input() nombre: string;
-  @Input() seguridad: Seguridad;
   @Input() id: string;
+  @Input() guardia: any;
 
   fecha: number;
 
@@ -26,7 +25,8 @@ export class AsistenciaInfo1Page implements OnInit {
 
   constructor(private fireService: FireService,
               private accionesService: AccionesService,
-              private modalCtrl: ModalController) { }
+              private modalCtrl: ModalController,
+              private callNumber: CallNumber) { }
 
   newAsistencia : Asistencia = {
     dia: null,
@@ -42,30 +42,32 @@ export class AsistenciaInfo1Page implements OnInit {
   }
 
   async ionViewWillEnter() {
-    this.newAsistencia.dia = this.asistencia.dia;
-    this.newAsistencia.fotos = this.asistencia.fotos;
-    this.newAsistencia.horario = this.asistencia.horario;
-    this.newAsistencia.numero = this.asistencia.numero;
-    this.newAsistencia.servicio = this.asistencia.servicio;
-    this.newAsistencia.retardo = this.asistencia.retardo;
-    this.newAsistencia.valido = this.asistencia.valido;
-
     this.fecha = new Date().getDay() -1;
     if(this.fecha == -1) {
       this.fecha = 6;
     }
 
-    var date = new Date();
-    date.setHours(this.asistencia.servicio.horario.hora);
-    date.setMinutes(this.asistencia.servicio.horario.minutos);
-    date.setSeconds(0);
-    this.horario = date.toUTCString();
+    if(this.guardia.asistencia != null) {
+      this.newAsistencia.dia = this.guardia.asistencia.dia;
+      this.newAsistencia.fotos = this.guardia.asistencia.fotos;
+      this.newAsistencia.horario = this.guardia.asistencia.horario;
+      this.newAsistencia.numero = this.guardia.asistencia.numero;
+      this.newAsistencia.servicio = this.guardia.asistencia.servicio;
+      this.newAsistencia.retardo = this.guardia.asistencia.retardo;
+      this.newAsistencia.valido = this.guardia.asistencia.valido;
 
-    var date2 = new Date();
-    date2.setHours(this.asistencia.horario.hora);
-    date2.setMinutes(this.asistencia.horario.minutos);
-    date2.setSeconds(0);
-    this.horario2 = date2.toUTCString();
+      var date = new Date();
+      date.setHours(this.guardia.asistencia.servicio.horario.hora);
+      date.setMinutes(this.guardia.asistencia.servicio.horario.minutos);
+      date.setSeconds(0);
+      this.horario = date.toUTCString();
+
+      var date2 = new Date();
+      date2.setHours(this.guardia.asistencia.horario.hora);
+      date2.setMinutes(this.guardia.asistencia.horario.minutos);
+      date2.setSeconds(0);
+      this.horario2 = date2.toUTCString();
+    }
 
     await this.obtenerCliente();
     await this.obtenerSupervisor();
@@ -74,11 +76,11 @@ export class AsistenciaInfo1Page implements OnInit {
   async obtenerCliente() {
     await this.fireService.getAllClientes().then(res => {
       res.subscribe(val => {
-        this.serviciotText = this.seguridad.servicios[this.fecha].servicio.cliente + " - ";
+        this.serviciotText = this.guardia.seguridad.servicios[this.fecha].servicio.cliente + " - ";
         for (var cliente of val) {
-          if(cliente.nombre == this.seguridad.servicios[this.fecha].servicio.cliente) {
+          if(cliente.nombre == this.guardia.seguridad.servicios[this.fecha].servicio.cliente) {
             for (var servicio of cliente.servicios) {
-              if(servicio.numero == this.seguridad.servicios[this.fecha].servicio.servicio) {
+              if(servicio.numero == this.guardia.seguridad.servicios[this.fecha].servicio.servicio) {
                 this.serviciotText += servicio.nombre;
                 return;
               }
@@ -99,7 +101,7 @@ export class AsistenciaInfo1Page implements OnInit {
       res.subscribe(val => {
         for(var supervisor of val) {
           for(var servicio of supervisor.clientes) {
-            if(this.seguridad.servicios[fecha].servicio.cliente == servicio) {
+            if(this.guardia.seguridad.servicios[fecha].servicio.cliente == servicio) {
               this.obtenerNameSupervisor(supervisor.numero);
               return;
             }
@@ -136,4 +138,67 @@ export class AsistenciaInfo1Page implements OnInit {
     }
   }
 
+  async llamar() {
+    if(this.guardia.celular != null) {
+      this.callNumber.callNumber(this.guardia.celular.toString(), true)
+    } else {
+      this.accionesService.presentToast("El elemento no cuenta con un numero disponible para marcar actualmente")
+    }
+  }
+
+  async registrarAsistencia() {
+    var ok = false;
+    await this.accionesService.presentAlertPersonalizada([{text: 'Registrar', handler: (blah) => {ok = true}},
+      {text: 'Cancelar', handler: (blah) => {}}], "Registrar asistencia del elemento" , 
+      "Deseas registrar la asistencia del elemento, despues no se podra cancelar?");
+
+    if(ok) {
+      var fecha = new Date();
+      var año = fecha.getFullYear();
+      var mes = fecha.getMonth();
+      var dia = fecha.getDate();
+      var fecha2 = new Date(año, mes, dia, 0, 0, 0, 0);
+
+      var hora = fecha.getHours();
+      var minutos = fecha.getMinutes();
+      var horario: Hora = {
+        hora: hora,
+        minutos: minutos
+      }
+
+      var servicio: ServicioA = this.guardia.seguridad.servicios[this.fecha].servicio;
+
+      var retardo = false;
+      var horaRetardo = servicio.horario.hora;
+      var minutosRetardo = horario.minutos + 20;
+      if(minutosRetardo > 59) {
+        horaRetardo += 1;
+        minutosRetardo -= 60;
+        if(horaRetardo == 25) {
+          horaRetardo = 0;
+        }
+      }
+      if(horario.hora == horaRetardo && horario.minutos > minutosRetardo) {
+        retardo = true;
+      }
+
+      var asistencia: Asistencia = {
+        // @ts-ignore
+        dia: fecha2,
+        fotos: {
+          imagenP: null,
+          iamgenL: null
+        },
+        horario: horario,
+        numero: this.guardia.seguridad.numero,
+        servicio: servicio,
+        retardo: retardo,
+        valido: true
+      }
+
+      await this.fireService.addAsistencias(asistencia);
+
+      this.modalCtrl.dismiss();
+    }
+  }
 }

@@ -1,0 +1,64 @@
+<app-header-modal [titulo]="'Agregar '+ tipo" ruta="finanzas-home"></app-header-modal>
+
+<ion-content>
+  <ion-item lines="none"> 
+    <ion-badge color="primary" class="centrari titulo">Nuevo {{tipo}}</ion-badge>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label class="explicacion ion-text-wrap">Ingresa los datos necesarios para el nuevo movimiento</ion-label>
+  </ion-item>
+
+  <form #formulario="ngForm">
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary">Titulo:</ion-label>
+        <ion-input class="margentexto"
+                    type="text" 
+                    placeholder="Escriba el titulo del movimiento"
+                    name ="titulo"
+                    [(ngModel)]="tituloMonto"></ion-input>
+      </ion-item>
+  
+      <ion-item color="light">
+        <ion-label color="primary">Fecha del monto:</ion-label>
+        <ion-datetime class="margentexto"
+                      displayFormat="MMM DD, YYYY"
+                      monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                      [value]="nacimiento"
+                      readonly="true">
+                    </ion-datetime>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label color="primary">Monto:</ion-label>
+        <ion-input class="margentexto" 
+                    type="number" 
+                    placeholder="8000"
+                    name="monto"
+                    [(ngModel)]="monto"></ion-input>
+      </ion-item>
+  
+      <ion-item color="light" lines="none">
+        <ion-label color="primary">Descripcion:</ion-label>
+      </ion-item>
+
+      <ion-item color="light">
+        <ion-textarea placeholder="Ingresar descripcion del movimiento"
+                      name="descripcion"
+                      required
+                      [(ngModel)]="descripcionMonto"></ion-textarea>
+      </ion-item>
+  
+    </ion-list>
+
+    <ion-button class="boton1 centrari"
+                [disabled]="formulario.invalid"
+                (click)="agregarMonto()">Agregar Movimiento</ion-button>
+  </form>
+
+</ion-content>

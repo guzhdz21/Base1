@@ -122,6 +122,15 @@ export class BienvenidaPage implements OnInit {
         this.router.navigate(["/home-rm"]);
         break;
       }
+
+      case 'Finanzas' : {
+        this.router.navigate(["/finanzas-home"], {
+          queryParams: {
+            login: "false"
+          }
+        });
+        break;
+      }
     }
     return;
   }

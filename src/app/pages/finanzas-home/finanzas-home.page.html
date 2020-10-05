@@ -1,0 +1,184 @@
+<ion-router-outlet id="finanzas"></ion-router-outlet>
+<ion-header no-border>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button menu="finanzas"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Global Fhas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-menu side="start"
+          menuId="finanzas"
+          contentId="finanzas">
+  
+  <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menú</ion-title>
+      </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+
+    <ion-menu-toggle>
+
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img src="/assets/images/Logo.JPG">
+        </ion-avatar>
+        <ion-label>{{usuario.nombre}}</ion-label>
+      </ion-item>
+        
+      </ion-menu-toggle>
+      
+      <ion-list>
+        <ion-menu-toggle *ngFor="let opcion of finanzas">
+          <ion-item (click)="redirigir(opcion.nombre, opcion.irA)">
+            <ion-icon color="primary" 
+                      [name]="opcion.icono" 
+                      slot="start"
+                      class="masleft"></ion-icon>
+            <ion-label>{{opcion.nombre}}</ion-label>
+          </ion-item>
+
+        </ion-menu-toggle> 
+      </ion-list>
+
+  </ion-content>
+</ion-menu>
+
+<div> 
+  <ion-toolbar>
+    <ion-segment (ionChange)="segment($event)" value="Gastos">
+        <ion-segment-button value="Gastos">
+          <ion-label>Gastos</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="Calendario">
+          <ion-label>Calendario</ion-label>
+        </ion-segment-button>
+
+      </ion-segment>
+  </ion-toolbar>
+
+  <ion-item lines="none"> 
+    <ion-badge color="primary" class="centrari titulo">{{titulo}}</ion-badge>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-icon [name]="icono" color="primary" class="centrari icono1"></ion-icon>
+  </ion-item>
+</div>
+
+<ion-content>
+<div *ngIf="titulo == 'Calendario'">
+  <ion-card>
+    <ion-card-header tappable (click)="collapseCard = !collapseCard" color="primary" class="delgado">
+      <ion-item color="primary" lines="none">
+        <ion-card-title>Nuevo Recordatorio</ion-card-title>
+        <ion-icon name="add" class="centrari"></ion-icon>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content *ngIf="!collapseCard">
+ 
+      <ion-item>
+        <ion-input type="text" placeholder="Titulo del recordatorio" [(ngModel)]="event.title"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="text" placeholder="Descripcion del recordatorio" [(ngModel)]="event.desc"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Hora de inicio</ion-label>
+        <ion-datetime cancelText="Cancelar" doneText="Aceptar" displayFormat="MM/DD/YYYY HH:mm" pickerFormat="HH:mm" [(ngModel)]="event.startTime" [min]="minDate"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>Hora de fin</ion-label>
+        <ion-datetime cancelText="Cancelar" doneText="Aceptar" displayFormat="MM/DD/YYYY HH:mm" pickerFormat="HH:mm" [(ngModel)]="event.endTime" [min]="minDate"></ion-datetime>
+      </ion-item>
+      <ion-button fill="outline" expand="block"  [disabled]="event.title == ''" (click)="addRecordatorio()">Agregar Recordatorio</ion-button>
+ 
+    </ion-card-content>
+  </ion-card>
+
+  <ion-row>
+    <ion-col size="3" text-left>
+      <ion-button fill="clear" (click)="back()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-col>
+
+    <ion-col size="6">
+    <ion-button expand="block" color="primary"> {{ viewTitle }}</ion-button>
+    </ion-col>
+
+    <ion-col size="3" text-right>
+      <ion-button fill="clear" (click)="next()">
+        <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <calendar
+  [eventSource]="eventSource" 
+  [calendarMode]="calendar.mode"
+  [currentDate]="calendar.currentDate"
+  (onEventSelected)="onEventSelected($event)"
+  (onTitleChanged)="onViewTitleChanged($event)"
+  (onTimeSelected)="onTimeSelected($event)"
+  startingDayWeek="1"
+  [markDisabled]="markDisabled"
+  [locale]="calendar.locale"
+  noEventsLabel="Sin recordatorios"
+  formatDayHeader="E">
+  </calendar>
+</div>
+
+<div *ngIf="titulo == 'Gastos'">
+  <ion-item lines="none">
+    <ion-label class="explicacion ion-text-wrap">Ingresos y egresos de {{mes}}</ion-label>
+  </ion-item>
+  <div style="display: block">
+    <canvas baseChart
+      [datasets]="barChartData"
+      [labels]="barChartLabels"
+      [options]="barChartOptions"
+      [plugins]="barChartPlugins"
+      [legend]="barChartLegend"
+      [chartType]="barChartType"
+      [colors]="chartColors">
+    </canvas>
+  </div>
+
+  <ion-list>
+    <ion-item lines="none"> 
+      <ion-badge color="success" class="centrari subtitulo">Ingresos: {{this.ingresos}}</ion-badge>
+      <ion-buttons>
+        <ion-button (click)="agregarMovimiento('ingreso')">
+          <ion-icon name="add" slot="icon-only" color="primary"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  
+    <ion-item lines="none"> 
+      <ion-badge color="danger" class="centrari subtitulo">Egresos: {{this.egresos}}</ion-badge>
+      <ion-buttons>
+        <ion-button (click)="agregarMovimiento('egreso')">
+          <ion-icon name="add" slot="icon-only" color="primary"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  
+    <ion-item lines="none"> 
+      <ion-badge color="primary" class="centrari subtitulo">Utilidad: {{this.ingresos - this.egresos}}</ion-badge>
+      <ion-buttons>
+        <ion-button disabled="true">
+          <ion-icon slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+</div>
+</ion-content>

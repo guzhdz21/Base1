@@ -50,7 +50,8 @@ const routes: Routes = [
   {
     path: 'asistencia-info1',
     loadChildren: () => import('./pages/asistencia-info1/asistencia-info1.module').then( m => m.AsistenciaInfo1PageModule)
-  },  {
+  },
+  {
     path: 'modificar-empleado',
     loadChildren: () => import('./pages/modificar-empleado/modificar-empleado.module').then( m => m.ModificarEmpleadoPageModule)
   },
@@ -62,7 +63,17 @@ const routes: Routes = [
     path: 'agregar-comprador',
     loadChildren: () => import('./pages/agregar-comprador/agregar-comprador.module').then( m => m.AgregarCompradorPageModule)
   },
-
+  {
+    path: 'finanzas-home',
+    loadChildren: () => import('./pages/finanzas-home/finanzas-home.module').then( m => m.FinanzasHomePageModule)
+  },  {
+    path: 'nuevo-movimiento',
+    loadChildren: () => import('./pages/nuevo-movimiento/nuevo-movimiento.module').then( m => m.NuevoMovimientoPageModule)
+  },
+  {
+    path: 'alertas-incidentes',
+    loadChildren: () => import('./pages/alertas-incidentes/alertas-incidentes.module').then( m => m.AlertasIncidentesPageModule)
+  }
 
 ];
 

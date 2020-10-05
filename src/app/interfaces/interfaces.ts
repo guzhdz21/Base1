@@ -108,11 +108,30 @@ export interface Incidente {
     servicio: string;
     titulo: string;
     descripcion: string;
-    hora: Hora;
+    hora: Date;
 }
 
 export interface Supervisor {
     numero: number;
     alertas: Incidente[];
     clientes: string[];
+}
+
+export interface Finanza {
+    numero: number;
+    recordatorios: any[];
+}
+
+export interface DataF {
+    año: number;
+    mes: number;
+    ingresos: InEgresos[];
+    egresos: InEgresos[];
+}
+
+export interface InEgresos {
+    cantidad: number;
+    fecha: Date;
+    titulo: String;
+    descripcion: String
 }

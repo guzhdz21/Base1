@@ -128,6 +128,15 @@ export class LoginPage implements OnInit {
         this.router.navigate(["/home-rm"]);
         break;
       }
+
+      case 'Finanzas' : {
+        this.router.navigate(["/finanzas-home"], {
+          queryParams: {
+            login: "true"
+          }
+        });
+        break;
+      }
     }
   }
 

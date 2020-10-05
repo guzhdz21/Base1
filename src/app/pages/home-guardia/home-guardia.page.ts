@@ -597,12 +597,6 @@ export class HomeGuardiaPage implements OnInit {
     });
 
     var fecha = new Date();
-    var hora = fecha.getHours();
-    var minutos = fecha.getMinutes();
-    var horario: Hora = {
-      hora: hora,
-      minutos: minutos
-    }
 
     var incidente: Incidente = {
       numero: this.usuario.numero,
@@ -610,7 +604,7 @@ export class HomeGuardiaPage implements OnInit {
       servicio: this.servicioText,
       titulo: this.tituloAlerta,
       descripcion: this.descripcionAlerta,
-      hora: horario
+      hora: fecha
     }
 
     var supervisor: Supervisor = {

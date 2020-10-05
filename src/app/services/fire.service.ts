@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo, Supervisor, Cabina, Directivo, Comprador } from '../interfaces/interfaces';
+import { Usuario, Seguridad, Cliente, Asistencia, Dispositivo, Supervisor, Cabina, Directivo, Comprador, Finanza, DataF } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,12 @@ export class FireService {
 
   private compradoresColletion: AngularFirestoreCollection<Comprador>;
   private compradores: Observable<Comprador[]>;
+
+  private finanzasColletion: AngularFirestoreCollection<Finanza>;
+  private finanzas: Observable<Finanza[]>;
+
+  private dataFColletion: AngularFirestoreCollection<DataF>;
+  private dataF: Observable<DataF[]>;
 
   constructor(private db: AngularFirestore) {
   }
@@ -352,5 +358,73 @@ export class FireService {
   async removeCompradores(id: string) {
     await this.fireCompradores();
     return this.compradoresColletion.doc(id).delete();
+  }
+
+  fireFinanzas() {
+    this.finanzasColletion = this.db.collection<Finanza>('finanzas');
+
+    this.finanzas = this.finanzasColletion.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
+  }
+
+  async getAllFinanzas() {
+    await this.fireFinanzas();
+    return this.finanzas;
+  }
+
+  async addFinanzas(finanza: Finanza) {
+    await this.fireFinanzas();
+    return this.finanzasColletion.add(finanza);
+  }
+
+  async updateFinanzas(finanza: Finanza, id: string) {
+    await this.fireFinanzas();
+    return this.finanzasColletion.doc(id).update(finanza);
+  }
+
+  async removeFinanzas(id: string) {
+    await this.fireFinanzas();
+    return this.finanzasColletion.doc(id).delete();
+  }
+
+  fireDataF() {
+    this.dataFColletion = this.db.collection<DataF>('datafinanciera');
+
+    this.dataF = this.dataFColletion.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
+  }
+
+  async getAllDataF() {
+    await this.fireDataF();
+    return this.dataF;
+  }
+
+  async addDataF(dataF: DataF) {
+    await this.fireDataF();
+    return this.dataFColletion.add(dataF);
+  }
+
+  async updateDataF(dataF: DataF, id: string) {
+    await this.fireDataF();
+    return this.dataFColletion.doc(id).update(dataF);
+  }
+
+  async removeDataF(id: string) {
+    await this.fireDataF();
+    return this.dataFColletion.doc(id).delete();
   }
 }

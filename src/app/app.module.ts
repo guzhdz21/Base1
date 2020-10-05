@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -18,6 +18,12 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { PipesModule } from './pipes/pipes.module';
 import { ComponentsModule } from './components/components.module';
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import es from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+import { ChartsModule } from 'ng2-charts';
+
+registerLocaleData(es);
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,7 +35,8 @@ import { CallNumber } from '@ionic-native/call-number/ngx';
     AngularFirestoreModule,
     IonicStorageModule.forRoot(),
     PipesModule,
-    ComponentsModule
+    ComponentsModule,
+    ChartsModule
   ],
   providers: [
     StatusBar,
@@ -38,7 +45,9 @@ import { CallNumber } from '@ionic-native/call-number/ngx';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Camera,
     CallNumber,
-    FirebaseX
+    FirebaseX,
+    LocalNotifications,
+    {provide: LOCALE_ID, useValue: 'es-MX'}
   ],
   bootstrap: [AppComponent]
 })
